@@ -1,0 +1,44 @@
+{
+  "faqs": [
+    {
+      "id": 1,
+      "question": "What is the cheapest day of the week to book a flight?",
+      "answer": "Usually, Tuesdays and Wednesdays are cheaper. This is because these mid-week days typically have lower demand, and airlines often release new fares and discount existing tickets to fill remaining seats."
+    },
+    {
+      "id": 2,
+      "question": "Which month of the year are flight prices lowest?",
+      "answer": "Prices are typically lowest in January and September. These months fall during the 'shoulder season' - after peak holiday periods when travel demand drops significantly."
+    },
+    {
+      "id": 3,
+      "question": "How far in advance should I book international flights?",
+      "answer": "For international flights, it's best to book 3-6 months in advance. This window typically offers the best combination of availability and competitive pricing."
+    },
+    {
+      "id": 4,
+      "question": "What are the best ways to find flight deals?",
+      "answer": "Sign up for airline newsletters, use price comparison websites, be flexible with your travel dates, and consider nearby airports. Setting price alerts can also help you track fare changes."
+    },
+    {
+      "id": 5,
+      "question": "Do flight prices change depending on the time of day?",
+      "answer": "Yes, flight prices can fluctuate throughout the day. Many airlines update their prices overnight, so early morning (around 3 AM) can be a good time to check fares."
+    },
+    {
+      "id": 6,
+      "question": "What's the best way to book multi-city flights?",
+      "answer": "Use flight search engines that specialize in multi-city itineraries, compare booking separately vs. as one ticket, and consider open-jaw flights (flying into one city and out of another)."
+    },
+    {
+      "id": 7,
+      "question": "How can I avoid paying for seat selection?",
+      "answer": "Check in early online (usually 24 hours before flight), join airline loyalty programs, or consider flying during off-peak times when more seats are likely to be available."
+    },
+    {
+      "id": 8,
+      "question": "What should I do if flight prices are too high?",
+      "answer": "Consider alternative airports, be flexible with dates, set price alerts, look for deals on different airlines, or consider breaking your journey with a stopover that might work out cheaper."
+    }
+  ]
+}

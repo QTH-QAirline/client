@@ -1,0 +1,44 @@
+{
+  "faqs": [
+    {
+      "id": 1,
+      "question": "Ngày nào trong tuần đặt vé máy bay rẻ nhất?",
+      "answer": "Thông thường, các ngày thứ Ba và thứ Tư sẽ rẻ hơn. Lý do là vì các ngày giữa tuần này thường có nhu cầu thấp hơn, và các hãng hàng không thường tung ra giá vé mới hoặc giảm giá vé hiện có để lấp đầy chỗ trống."
+    },
+    {
+      "id": 2,
+      "question": "Tháng nào trong năm giá vé máy bay thấp nhất?",
+      "answer": "Giá vé thường thấp nhất vào tháng Một và tháng Chín. Đây là các tháng thuộc 'mùa thấp điểm' - sau những kỳ nghỉ cao điểm khi nhu cầu đi lại giảm đáng kể."
+    },
+    {
+      "id": 3,
+      "question": "Nên đặt vé máy bay quốc tế trước bao lâu?",
+      "answer": "Đối với các chuyến bay quốc tế, tốt nhất là nên đặt trước từ 3-6 tháng. Khoảng thời gian này thường mang lại sự kết hợp tốt nhất giữa tính sẵn có và mức giá cạnh tranh."
+    },
+    {
+      "id": 4,
+      "question": "Làm thế nào để tìm được vé máy bay giá tốt?",
+      "answer": "Đăng ký nhận bản tin từ các hãng hàng không, sử dụng các trang web so sánh giá vé, linh hoạt với ngày đi, và cân nhắc các sân bay gần đó. Cài đặt thông báo giá vé cũng có thể giúp bạn theo dõi sự thay đổi giá cả."
+    },
+    {
+      "id": 5,
+      "question": "Giá vé máy bay có thay đổi tùy vào thời điểm trong ngày không?",
+      "answer": "Có, giá vé máy bay có thể thay đổi trong ngày. Nhiều hãng hàng không cập nhật giá vé qua đêm, vì vậy, sáng sớm (khoảng 3 giờ sáng) có thể là thời điểm tốt để kiểm tra giá vé."
+    },
+    {
+      "id": 6,
+      "question": "Cách tốt nhất để đặt vé cho hành trình nhiều điểm đến là gì?",
+      "answer": "Sử dụng các công cụ tìm kiếm chuyến bay chuyên về hành trình nhiều điểm, so sánh việc đặt vé riêng lẻ so với đặt thành một vé, và cân nhắc các chuyến bay 'open-jaw' (bay đến một thành phố và khởi hành từ một thành phố khác)."
+    },
+    {
+      "id": 7,
+      "question": "Làm thế nào để tránh mất phí chọn chỗ ngồi?",
+      "answer": "Hãy làm thủ tục trực tuyến sớm (thường là 24 giờ trước khi bay), tham gia các chương trình khách hàng thân thiết của hãng hàng không, hoặc bay vào những thời điểm ngoài cao điểm khi có nhiều chỗ ngồi trống hơn."
+    },
+    {
+      "id": 8,
+      "question": "Tôi nên làm gì nếu giá vé máy bay quá cao?",
+      "answer": "Hãy cân nhắc các sân bay thay thế, linh hoạt với ngày bay, đặt thông báo giá vé, tìm kiếm ưu đãi từ các hãng hàng không khác, hoặc cân nhắc việc chia nhỏ hành trình với một điểm dừng để có thể tiết kiệm chi phí."
+    }
+  ]
+}

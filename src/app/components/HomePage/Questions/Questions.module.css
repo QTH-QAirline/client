@@ -1,0 +1,161 @@
+.container {
+  width: 100%;
+  background-color: #f6f6f6;
+  padding: 20px 0;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+  color: #2d3748;
+}
+
+.faqItems {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.faqItem {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.faqItem:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background: none;
+  border: none;
+  color: #2d3748;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.faqQuestion:hover {
+  color: #4299e1;
+}
+
+.faqQuestion.active {
+  color: #4299e1;
+}
+
+.arrow {
+  font-size: 1.5rem;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  color: #4a5568;
+  line-height: 1.6;
+  transition: all 0.3s ease-in-out;
+}
+
+.faqAnswer.open {
+  max-height: 500px;
+  padding: 0 20px 20px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.viewMoreButton,
+.showLessButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewMoreButton {
+  background-color: #048b99;
+  color: white;
+}
+
+.viewMoreButton:hover {
+  background-color: #0056b3;
+}
+
+.viewMoreButton:active {
+  transform: scale(0.95);
+}
+
+.viewMoreButton:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(0, 123, 255, 0.5);
+}
+
+.showLessButton {
+  background-color: #64748b;
+  color: white;
+}
+
+.showLessButton:hover {
+  background-color: #475569;
+}
+
+.showLessButton:active {
+  transform: scale(0.95);
+}
+
+.showLessButton:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(0, 123, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px 16px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+  }
+  .faqItems {
+    width: 100%;
+  }
+  .faqAnswer.open {
+    padding: 0 16px 16px;
+  }
+}
