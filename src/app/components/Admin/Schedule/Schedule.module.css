@@ -1,0 +1,255 @@
+.scheduleContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.newFlightForm {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.newFlightForm h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+.formGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.formGroup label {
+  width: 150px;
+  font-weight: bold;
+}
+
+.formGroup input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.addButton {
+  background-color: #2c9cac;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: medium;
+  font-weight: bold;
+}
+
+.addButton:hover {
+  background-color: #048c9c;
+}
+
+.flightTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.flightTable th,
+.flightTable td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.flightTable th {
+  background-color: #92cdd1;
+  font-weight: bold;
+}
+
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.statusOnTime {
+  background-color: #e6f3e6;
+  color: #2c5f2d;
+}
+
+.statusDelayed {
+  background-color: #fff4e6;
+  color: #9f6000;
+}
+
+.delayButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delayModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.delayModal h2 {
+  margin-top: 0;
+}
+
+.delayModal label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.delayModal input[type="time"] {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.saveButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .scheduleContainer {
+    padding: 20px 10px;
+  }
+
+  .newFlightForm {
+    padding: 16px;
+  }
+
+  .formGroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .formGroup label {
+    width: auto;
+    margin-bottom: 6px;
+  }
+
+  .formGroup input {
+    width: 100%;
+  }
+
+  .flightTable th,
+  .flightTable td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .statusBadge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  .delayButton,
+  .deleteButton {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scheduleContainer {
+    padding: 16px 8px;
+  }
+
+  .newFlightForm {
+    padding: 12px;
+  }
+
+  .formGroup {
+    margin-bottom: 10px;
+  }
+
+  .formGroup label {
+    font-size: 14px;
+  }
+
+  .formGroup input {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .addButton {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .flightTable th,
+  .flightTable td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .statusBadge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .delayButton,
+  .deleteButton {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .delayModal {
+    width: 90%;
+  }
+}

@@ -1,0 +1,230 @@
+.bookingContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.controlPanel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: medium;
+}
+
+.clearSearchButton {
+  margin-left: -35px;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.filterSelect {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.resetFiltersButton {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.statisticsPanel {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  margin-right: 10px;
+  background-color: #fff;
+}
+
+.statCard:last-child {
+  margin-right: 0;
+}
+
+.salesChartContainer {
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chartControls {
+  display: flex;
+  gap: 10px;
+}
+
+.chartControls button {
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.chartControls :hover {
+  background-color: #5b65f1;
+}
+
+.chartControls .activeButton {
+  background-color: #5b65f1;
+}
+
+.bookingTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+.bookingTable th,
+.bookingTable td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.bookingTable th {
+  background-color: #92cdd1;
+}
+
+/* .bookingTable tr:nth-child(even) {
+  background-color: #e9f3f3;
+} */
+
+.statusBadge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+}
+
+.statusConfirmed {
+  background-color: #e6f3e6;
+  color: #2c5f2d;
+}
+
+.statusPending {
+  background-color: #fff4e6;
+  color: #9f6000;
+}
+
+.statusCancelled {
+  background-color: #f8e6e6;
+  color: #a94442;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .controlPanel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchContainer {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+
+  .filterContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .statisticsPanel {
+    flex-direction: column;
+  }
+
+  .statCard {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chartControls {
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .bookingTable table,
+  .bookingTable thead,
+  .bookingTable tbody,
+  .bookingTable th,
+  .bookingTable td,
+  .bookingTable tr {
+    display: block;
+  }
+
+  .bookingTable thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .bookingTable tr {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+
+  .bookingTable td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  .bookingTable td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+  }
+}

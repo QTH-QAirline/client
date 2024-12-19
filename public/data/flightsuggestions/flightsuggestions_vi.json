@@ -1,0 +1,74 @@
+{
+  "destinations": [
+    {
+      "id": 1,
+      "name": "Nhà thờ Lớn, Dubai",
+      "image": "/images/dubai.jpg",
+      "startDate": "02 Tháng 9, 2024",
+      "endDate": "07 Tháng 9, 2024",
+      "type": "Phổ thông",
+      "price": "12.698.000",
+      "currency": "₫"
+    },
+    {
+      "id": 2,
+      "name": "Tháp Eiffel, Paris",
+      "image": "/images/paris.jpeg",
+      "startDate": "10 Tháng 9, 2024",
+      "endDate": "15 Tháng 10, 2024",
+      "type": "Phổ thông",
+      "price": "18.765.000",
+      "currency": "₫"
+    },
+    {
+      "id": 3,
+      "name": "Đấu trường La Mã, Rome",
+      "image": "/images/rome.jpeg",
+      "startDate": "20 Tháng 9, 2024",
+      "endDate": "25 Tháng 9, 2024",
+      "type": "Phổ thông",
+      "price": "23.240.870",
+      "currency": "₫"
+    },
+    {
+      "id": 4,
+      "name": "Đền Taj Mahal, Ấn Độ",
+      "image": "/images/india.jpeg",
+      "startDate": "05 Tháng 10, 2024",
+      "endDate": "10 Tháng 10, 2024",
+      "type": "Phổ thông",
+      "price": "10.814.364",
+      "currency": "₫"
+    },
+    {
+      "id": 5,
+      "name": "Vạn Lý Trường Thành, Trung Quốc",
+      "image": "/images/china.jpg",
+      "startDate": "15 Tháng 10, 2024",
+      "endDate": "20 Tháng 10, 2024",
+      "type": "Phổ thông",
+      "price": "4.379.000",
+      "currency": "₫"
+    },
+    {
+      "id": 6,
+      "name": "Núi Phú Sĩ, Nhật Bản",
+      "image": "/images/japan.jpeg",
+      "startDate": "01 Tháng 10, 2024",
+      "endDate": "06 Tháng 10, 2024",
+      "type": "Phổ thông",
+      "price": "11.038.000",
+      "currency": "₫"
+    },
+    {
+      "id": 7,
+      "name": "Santorini, Hy Lạp",
+      "image": "/images/greece.jpg",
+      "startDate": "10 Tháng 10, 2024",
+      "endDate": "15 Tháng 10, 2024",
+      "type": "Phổ thông",
+      "price": "30.579.000",
+      "currency": "₫"
+    }
+  ]
+}

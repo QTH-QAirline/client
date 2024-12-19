@@ -1,0 +1,137 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #f8f9fa;
+  overflow-x: hidden;
+  transition: width 0.3s ease;
+  z-index: 100;
+  border-right: 1px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.collapsed {
+  width: 80px !important;
+  overflow: hidden;
+}
+
+.collapseToggle {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #495057;
+  z-index: 10;
+}
+
+.collapsedMenuItem {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+}
+
+.menuItem {
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  margin: 5px 10px;
+}
+
+.menuItem:hover {
+  background-color: #e9f3f3;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  color: #343a40;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.menuLabel {
+  flex-grow: 1;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.menuIcon {
+  stroke: #495057;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  transition: stroke 0.2s ease;
+}
+
+.menuLink:hover .menuIcon {
+  stroke: #007bff;
+}
+
+.active {
+  background-color: #92cdd1;
+  font-weight: bold;
+}
+
+.active .menuIcon {
+  stroke: #007bff;
+}
+
+.mobileSidebarTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  /* background-color: #e9ecef; */
+  text-align: center;
+  /* border-bottom: 1px solid #dee2e6; */
+}
+
+.logoIcon {
+  object-fit: contain;
+}
+
+.companyName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #343a40;
+}
+
+.mobileSidebarTitle h2 {
+  margin: 0;
+  color: #343a40;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.mobileNavContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .container {
+    display: none;
+  }
+}
+
+/* Desktop view */
+@media (min-width: 769px) {
+  .collapsed .menuLabel {
+    display: none;
+  }
+
+  .menuLabel {
+    display: block;
+  }
+}

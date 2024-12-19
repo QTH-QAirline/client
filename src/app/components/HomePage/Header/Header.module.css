@@ -1,0 +1,412 @@
+.container {
+  width: 100%;
+  background: linear-gradient(to right, #0a2043, #6366f1);
+  margin-top: 50px;
+  /* Thêm margin-top bằng với chiều cao của navigation */
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0d9488;
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.logoIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: currentColor;
+  fill: none;
+}
+
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.desktopControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.languageSelect {
+  padding: 0.5rem;
+  border: 1px solid #b7b9bc;
+  border-radius: 0.375rem;
+  background-color: none;
+}
+
+.loginButton {
+  padding: 0.5rem 1rem;
+  color: #0d9488;
+  background: none;
+  background-color: white;
+  border: 1px solid #b7b9bc;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.loginButton:hover {
+  background-color: #f0fdfa;
+}
+
+.mobileMenu {
+  display: none;
+  padding: 1rem 0;
+  text-align: center;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.searchContainer {
+  padding: 2rem 0;
+}
+
+.searchForm {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mainInputs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputGroup {
+  flex: 1;
+  min-width: 0;
+  background-color: #f2f2f2;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0.25rem 0;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.iconInput {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inputIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+}
+
+.select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  appearance: none;
+}
+
+.swapButton {
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swapIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #048b99;
+}
+
+.searchButton {
+  padding: 0.75rem 2rem;
+  background-color: #048b99;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: #8a919e;
+  font-size: 1rem;
+}
+
+.searchButton:hover {
+  background: #0056b3;
+  box-shadow: 0 5px 15px rgba(40, 92, 211, 0.5);
+}
+
+.optionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.tripTypeSelector {
+  display: flex;
+  gap: 2rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.radioInput {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #048b99;
+}
+
+.radioText {
+  color: #4b5563;
+}
+
+.ticketClassSelector {
+  display: flex;
+  gap: 0.5rem;
+  background-color: #ebf5f7;
+  border-radius: 1rem;
+}
+
+.classButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: #ebf5f7;
+  color: #5bb2bc;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: bolder;
+  margin: 0;
+}
+
+.activeClass {
+  background-color: #048b99;
+  color: white;
+}
+
+/* Styles for DatePicker */
+.datepickerInput {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.datepickerInput:focus {
+  outline: none;
+}
+
+/* Tùy chỉnh DatePicker */
+.react-datepicker-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+  position: relative;
+  padding-right: 10px;
+}
+
+.react-datepicker__close-icon {
+  display: none;
+}
+
+.react-datepicker__close-icon::after {
+  content: none;
+}
+
+@media (max-width: 1024px) {
+  .mainInputs {
+    flex-wrap: wrap;
+  }
+
+  .inputGroup {
+    min-width: 200px;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+
+  .optionsRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+
+  .desktopControls {
+    display: none;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .searchForm {
+    padding: 1rem;
+  }
+
+  .mainInputs {
+    flex-direction: column;
+  }
+
+  .inputGroup {
+    width: 100%;
+  }
+
+  .swapButton {
+    transform: rotate(90deg);
+  }
+
+  .tripTypeSelector,
+  .ticketClassSelector {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* Điều chỉnh thứ tự trong giao diện mobile */
+  .optionsRow {
+    order: -1;
+    /* Đặt optionsRow trước mainInputs */
+  }
+
+  .mainInputs {
+    order: 1;
+    /* Đặt mainInputs sau optionsRow */
+  }
+
+  .searchForm {
+    /* Thêm thuộc tính này để có thể dùng order */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .optionsRow {
+    order: -1;
+    /* Đặt optionsRow lên trước */
+    border-top: none;
+    /* Bỏ border top vì giờ nó lên đầu */
+    /* Thêm padding bottom thay vì border */
+    padding-bottom: 1rem;
+  }
+
+  .mainInputs {
+    order: 1;
+    /* Đặt mainInputs xuống sau */
+    /* Thêm border top để tạo phân cách */
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Đảm bảo các phần tử nằm giữa */
+    gap: 1rem;
+  }
+
+  .languageSelect,
+  .loginButton {
+    width: 100%;
+    /* Đảm bảo cả hai button chiếm toàn bộ chiều rộng của container */
+    max-width: 250px;
+    /* Giới hạn chiều rộng tối đa của mỗi button */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    /* Giảm kích thước chữ */
+    margin: 0 auto;
+    /* Canh giữa */
+    border-radius: 0.375rem;
+  }
+
+  .languageSelect {
+    border: 1px solid #b7b9bc;
+    background-color: white;
+    text-align: center;
+    /* Căn giữa các option trong select */
+  }
+
+  .languageSelect option {
+    text-align: center;
+    /* Căn giữa chữ trong các option */
+  }
+
+  .loginButton {
+    color: #0d9488;
+    background: none;
+    background-color: white;
+    border: 1px solid #b7b9bc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .loginButton:hover {
+    background-color: #f0fdfa;
+  }
+}

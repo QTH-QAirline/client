@@ -1,0 +1,74 @@
+{
+  "destinations": [
+    {
+      "id": 1,
+      "name": "Large Mosque, Dubai",
+      "image": "/images/dubai.jpg",
+      "startDate": "02 Sep, 2024",
+      "endDate": "07 Sep, 2024",
+      "type": "Economy",
+      "price": 500,
+      "currency": "€"
+    },
+    {
+      "id": 2,
+      "name": "Eiffel Tower, Paris",
+      "image": "/images/paris.jpeg",
+      "startDate": "10 Sep, 2024",
+      "endDate": "15 Sep, 2024",
+      "type": "Economy",
+      "price": 700,
+      "currency": "€"
+    },
+    {
+      "id": 3,
+      "name": "Colosseum, Rome",
+      "image": "/images/rome.jpeg",
+      "startDate": "20 Sep, 2024",
+      "endDate": "25 Sep, 2024",
+      "type": "Economy",
+      "price": 867,
+      "currency": "€"
+    },
+    {
+      "id": 4,
+      "name": "Taj Mahal, India",
+      "image": "/images/india.jpeg",
+      "startDate": "05 Oct, 2024",
+      "endDate": "10 Oct, 2024",
+      "type": "Economy",
+      "price": 400,
+      "currency": "€"
+    },
+    {
+      "id": 5,
+      "name": "Great Wall, China",
+      "image": "/images/china.jpg",
+      "startDate": "15 Oct, 2024",
+      "endDate": "20 Oct, 2024",
+      "type": "Economy",
+      "price": 160,
+      "currency": "€"
+    },
+    {
+      "id": 6,
+      "name": "Mount Fuji, Japan",
+      "image": "/images/japan.jpeg",
+      "startDate": "01 Nov, 2024",
+      "endDate": "06 Nov, 2024",
+      "type": "Economy",
+      "price": 412,
+      "currency": "€"
+    },
+    {
+      "id": 7,
+      "name": "Santorini, Greece",
+      "image": "/images/greece.jpg",
+      "startDate": "10 Nov, 2024",
+      "endDate": "15 Nov, 2024",
+      "type": "Economy",
+      "price": 1141,
+      "currency": "€"
+    }
+  ]
+}
