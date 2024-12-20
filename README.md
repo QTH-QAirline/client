@@ -3,7 +3,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Getting Started
 
 Cài đặt React Router: npm install react-router-dom
+
 Để chạy được admin dashboard cài: npm install recharts
+
+Cài đặt React Select: npm install react-select
 
 First, run the development server:
 

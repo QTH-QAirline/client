@@ -1,4 +1,11 @@
 .container {
-    margin-top: 50px;
-    /* Thêm margin-top bằng với chiều cao của navigation */
+  margin-top: 50px;
+  /* Thêm margin-top bằng với chiều cao của navigation */
+  padding: 2rem;
+  width: 100vw;
+  background-image: url("/images/background.jpg");
+  background-size: cover; /* Ảnh nền sẽ bao phủ toàn bộ vùng phần tử */
+  background-position: center; /* Căn giữa ảnh nền */
+  background-attachment: fixed; /* Cố định ảnh nền khi cuộn */
+  background-repeat: no-repeat; /* Ảnh nền không lặp lại */
 }

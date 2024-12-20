@@ -1,89 +1,317 @@
 .bookingContainer {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .flightSummary {
-    background-color: #f2f2f2;
-    border-left: 5px solid #048b99;
-    padding: 1.5rem;
-    margin: 2rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+  background-color: #f2f2f2;
+  border-left: 5px solid #048b99;
+  padding: 1.5rem;
+  margin: 2rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .flightSummary:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .bookingForm {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .formGroup {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .formGroup label {
-    margin-bottom: 0.5rem;
-    color: #495057;
-    font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+  font-weight: 600;
 }
 
 .formGroup input {
-    padding: 12px;
-    border: 2px solid #ced4da;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
+  padding: 12px;
+  border: 2px solid #ced4da;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
 .formGroup input:focus {
-    outline: none;
-    border-color: #048b99;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
+  border-color: #048b99;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .submitButton {
-    grid-column: 1 / -1;
-    padding: 14px;
-    background-color: #048b99;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1rem;
+  grid-column: 1 / -1;
+  padding: 14px;
+  background-color: #048b99;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
 }
 
 .submitButton:hover {
-    background-color: #036570;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+  background-color: #036570;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
 }
 
 .submitButton:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 @media (max-width: 768px) {
-    .bookingContainer {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
+  .bookingContainer {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 
-    .bookingForm {
-        grid-template-columns: 1fr;
-    }
+  .bookingForm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flightSummary {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.summaryTitle {
+  color: #2d3748;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.flightHeader {
+  background-color: #f7fafc;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.airline {
+  color: #2b6cb0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.flightRoute {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f7fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.departure,
+.arrival {
+  flex: 1;
+}
+
+.arrival {
+  text-align: right;
+}
+
+.flightInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.duration {
+  color: #4a5568;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.flightLine {
+  width: 150px;
+  height: 2px;
+  background-color: #cbd5e0;
+  position: relative;
+  margin: 8px 0;
+}
+
+.stops {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #718096;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.label {
+  color: #718096;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.city {
+  color: #2d3748;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.airport {
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.time {
+  color: #2b6cb0;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.ticketDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.ticketInfo {
+  background-color: #f7fafc;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticketInfo .label {
+  margin-bottom: 8px;
+}
+
+.ticketInfo .value {
+  color: #2d3748;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.priceSection {
+  background-color: #ebf8ff;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceLabel {
+  color: #2c5282;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.priceValue {
+  color: #2b6cb0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .flightRoute {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .arrival {
+    text-align: left;
+  }
+
+  .flightLine {
+    width: 2px;
+    height: 50px;
+  }
+
+  .stops {
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+  }
+
+  .ticketDetails {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notificationOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.notificationBox {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  margin-bottom: 15px;
+}
+
+.checkIcon {
+  width: 40px;
+  height: 40px;
+  color: #2d6a4f;
+}
+
+.message {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.okButton {
+  background-color: #048b99;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.okButton:hover {
+  background-color: #036570;
 }

@@ -1,3 +1,4 @@
+import seatBooking from "../components/SearchFlights/SeatBooking/SeatBooking";
 import BookingConfirm from "../search-flights/booking-confirmation/page";
 
 export const en = {
@@ -121,7 +122,7 @@ export const en = {
     flightClasses: {
       Economy: "Economy",
       Business: "Business",
-      FirstClass: "First Class"
+      FirstClass: "First Class",
     },
     flightSearch: {
       title: "Flight Search Results",
@@ -130,27 +131,32 @@ export const en = {
       durationSort: "Duration",
       stops: {
         zero: "stops",
-        one: "stop"
+        one: "stop",
       },
       pricing: {
         multipleSeats: "Multiple seats",
         seatLeft: "seat left",
-        notAvailable: "Not available"
+        notAvailable: "Not available",
       },
-      bookingButton: "Process Booking"
-    }
+      bookingButton: "Process Booking",
+    },
   },
   bookingConfirm: {
-    confirm_booking: "Booking Confirmation",
+    loading: "Loading booking details...",
+    confirm_booking: "Confirm Your Booking",
     flight_details: "Flight Details",
     airline: "Airline",
     flight_number: "Flight Number",
     departure_city: "Departure City",
-    departure_airport: "Departure Airport",
+    departure_time: "Departure Time",
     arrival_city: "Arrival City",
-    arrival_airport: "Arrival Airport",
+    arrival_time: "Arrival Time",
     total_duration: "Total Duration",
+    stops: "Number of Stops",
     ticket_class: "Ticket Class",
+    selected_seat: "Selected Seat",
+    price: "Price",
+    passenger_details: "Passenger Details",
     full_name: "Full Name",
     date_of_birth: "Date of Birth",
     id_number: "ID/Passport Number",
@@ -158,8 +164,54 @@ export const en = {
     email: "Email",
     phone_number: "Phone Number",
     submit_booking: "Submit Booking",
-    loading: "Loading..."
-  }
+    booking_success: "Booking submitted successfully!",
+    success_message: "Booking submitted successfully!",
+  },
+  seatBooking: {
+    loading: "Loading flight information...",
+    flightSummary: "Flight Summary",
+    departure_city: "Departure City",
+    arrival_city: "Arrival City",
+    class: "Class",
+    flight: "Flight",
+    selectSeat: "Select Your Seat",
+    available: "Available",
+    occupied: "Occupied",
+    selected: "Selected",
+    confirm: "Confirm Selection",
+    seatClasses: {
+      economy: "Economy Class",
+      business: "Business Class",
+      firstClass: "First Class",
+    },
+    warnings: {
+      noSeatSelected: "Please select a seat to continue",
+      confirmSelection: "Are you sure you want to select seat",
+    },
+    flightDetails: {
+      from: "From",
+      to: "To",
+      date: "Date",
+      time: "Time",
+      duration: "Duration",
+      departure_city: "Departure City",
+    },
+    pricing: {
+      price: "Price",
+      tax: "Tax",
+      total: "Total",
+    },
+    seatInfo: {
+      seatNumber: "Seat Number",
+      rowNumber: "Row",
+      position: "Position",
+    },
+    buttons: {
+      back: "Back to Flight Selection",
+      next: "Continue to Payment",
+      cancel: "Cancel Selection",
+    },
+  },
 };
 
 export const vi = {
@@ -284,7 +336,7 @@ export const vi = {
     flightClasses: {
       Economy: "Hạng Phổ thông",
       Business: "Hạng Thương gia",
-      FirstClass: "Hạng Nhất"
+      FirstClass: "Hạng Nhất",
     },
     flightSearch: {
       title: "Kết quả tìm kiếm chuyến bay",
@@ -293,34 +345,85 @@ export const vi = {
       durationSort: "Thời gian",
       stops: {
         zero: "điểm dừng",
-        one: "điểm dừng"
+        one: "điểm dừng",
       },
       pricing: {
         multipleSeats: "Nhiều ghế",
         seatLeft: "ghế còn lại",
-        notAvailable: "Không có sẵn"
+        notAvailable: "Không có sẵn",
       },
-      bookingButton: "Xác nhận đặt chỗ"
-    }
+      bookingButton: "Xác nhận đặt chỗ",
+    },
   },
   bookingConfirm: {
+    loading: "Đang tải thông tin đặt vé...",
     confirm_booking: "Xác Nhận Đặt Vé",
-    flight_details: "Chi Tiết Chuyến Bay",
-    airline: "Hãng",
-    flight_number: "Số Chuyến Bay",
-    departure_city: "Điểm Đi",
-    departure_airport: "Sân Bay Đi",
-    arrival_city: "Điểm Đến",
-    arrival_airport: "Sân Bay Đến",
-    total_duration: "Tổng thời gian",
+    flight_details: "Thông Tin Chuyến Bay",
+    airline: "Hãng Hàng Không",
+    flight_number: "Số Hiệu Chuyến Bay",
+    departure_city: "Thành Phố Khởi Hành",
+    departure_time: "Thời Gian Khởi Hành",
+    arrival_city: "Thành Phố Đến",
+    arrival_time: "Thời Gian Đến",
+    total_duration: "Tổng Thời Gian Bay",
+    stops: "Số Điểm Dừng",
     ticket_class: "Hạng Vé",
-    full_name: "Họ và Tên Đầy Đủ",
+    selected_seat: "Ghế Đã Chọn",
+    price: "Giá Vé",
+    passenger_details: "Thông Tin Hành Khách",
+    full_name: "Họ và Tên",
     date_of_birth: "Ngày Sinh",
     id_number: "Số CMND/Hộ Chiếu",
     nationality: "Quốc Tịch",
     email: "Email",
     phone_number: "Số Điện Thoại",
     submit_booking: "Xác Nhận Đặt Vé",
-    loading: "Đang tải..."
-  }
+    booking_success: "Đặt vé thành công!",
+    success_message: "Xác nhận đặt vé thành công!",
+  },
+  seatBooking: {
+    loading: "Đang tải thông tin chuyến bay...",
+    flightSummary: "Thông tin chuyến bay",
+    departure_city: "Thành Phố Khởi Hành",
+    arrival_city: "Thành Phố Đến",
+    class: "Hạng ghế",
+    flight: "Chuyến bay",
+    selectSeat: "Chọn ghế ngồi",
+    available: "Còn trống",
+    occupied: "Đã đặt",
+    selected: "Đã chọn",
+    confirm: "Xác nhận chọn ghế",
+    seatClasses: {
+      economy: "Hạng phổ thông",
+      business: "Hạng thương gia",
+      firstClass: "Hạng nhất",
+    },
+    warnings: {
+      noSeatSelected: "Vui lòng chọn ghế để tiếp tục",
+      confirmSelection: "Bạn có chắc chắn muốn chọn ghế",
+    },
+    flightDetails: {
+      from: "Khởi hành từ",
+      to: "Đến",
+      date: "Ngày",
+      time: "Giờ",
+      duration: "Thời gian bay",
+      departure_city: "Thành Phố Khởi Hành",
+    },
+    pricing: {
+      price: "Giá vé",
+      tax: "Thuế",
+      total: "Tổng cộng",
+    },
+    seatInfo: {
+      seatNumber: "Số ghế",
+      rowNumber: "Hàng",
+      position: "Vị trí",
+    },
+    buttons: {
+      back: "Quay lại chọn chuyến bay",
+      next: "Tiếp tục thanh toán",
+      cancel: "Hủy chọn ghế",
+    },
+  },
 };
