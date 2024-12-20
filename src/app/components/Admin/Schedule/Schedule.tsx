@@ -9,6 +9,7 @@ interface Flight {
   departureCity: string;
   arrivalCity: string;
   departureDate: string;
+  arrivalDate: string;
   departureTime: string;
   arrivalTime: string;
   status: "onTime" | "delayed";
@@ -23,6 +24,7 @@ const Schedule: React.FC = () => {
       departureCity: "New York",
       arrivalCity: "Los Angeles",
       departureDate: "2024-06-15",
+      arrivalDate: "2024-06-15",
       departureTime: "09:00",
       arrivalTime: "12:00",
       status: "onTime",
@@ -34,6 +36,7 @@ const Schedule: React.FC = () => {
       departureCity: "Chicago",
       arrivalCity: "Miami",
       departureDate: "2024-06-15",
+      arrivalDate: "2024-06-15",
       departureTime: "14:30",
       arrivalTime: "17:45",
       status: "onTime",
@@ -45,6 +48,7 @@ const Schedule: React.FC = () => {
       departureCity: "San Francisco",
       arrivalCity: "Seattle",
       departureDate: "2024-06-15",
+      arrivalDate: "2024-06-15",
       departureTime: "20:15",
       arrivalTime: "22:30",
       status: "onTime",
@@ -54,6 +58,7 @@ const Schedule: React.FC = () => {
   const [delayedFlight, setDelayedFlight] = useState<Flight | null>(null);
   const [newDepartureTime, setNewDepartureTime] = useState("");
   const [newDepartureDate, setNewDepartureDate] = useState("");
+  const [newArrivalDate, setNewArrivalDate] = useState("");
 
   const [newFlight, setNewFlight] = useState<Partial<Flight>>({
     flightNumber: "",
@@ -61,6 +66,7 @@ const Schedule: React.FC = () => {
     departureCity: "",
     arrivalCity: "",
     departureDate: "",
+    arrivalDate: "",
     departureTime: "",
     arrivalTime: "",
   });
@@ -92,6 +98,7 @@ const Schedule: React.FC = () => {
       departureCity: newFlight.departureCity!,
       arrivalCity: newFlight.arrivalCity!,
       departureDate: newFlight.departureDate!,
+      arrivalDate: newFlight.arrivalDate!,
       departureTime: newFlight.departureTime!,
       arrivalTime: newFlight.arrivalTime!,
       status: "onTime",
@@ -103,6 +110,7 @@ const Schedule: React.FC = () => {
       departureCity: "",
       arrivalCity: "",
       departureDate: "",
+      arrivalDate: "",
       departureTime: "",
       arrivalTime: "",
     });
@@ -174,6 +182,17 @@ const Schedule: React.FC = () => {
           />
         </div>
         <div className={styles.formGroup}>
+          <label htmlFor="arrivalDate">Arrival Date:</label>
+          <input
+            type="date"
+            id="arrivalDate"
+            value={newFlight.arrivalDate}
+            onChange={(e) =>
+              setNewFlight({ ...newFlight, arrivalDate: e.target.value })
+            }
+          />
+        </div>
+        <div className={styles.formGroup}>
           <label htmlFor="departureTime">Departure Time:</label>
           <input
             type="time"
@@ -208,6 +227,7 @@ const Schedule: React.FC = () => {
             <th>Departure</th>
             <th>Arrival</th>
             <th>Departure Date</th>
+            <th>Arrival Date</th>
             <th>Departure Time</th>
             <th>Arrival Time</th>
             <th>Status</th>
@@ -222,6 +242,7 @@ const Schedule: React.FC = () => {
               <td>{flight.departureCity}</td>
               <td>{flight.arrivalCity}</td>
               <td>{flight.departureDate}</td>
+              <td>{flight.arrivalDate}</td>
               <td>{flight.departureTime}</td>
               <td>{flight.arrivalTime}</td>
               <td>

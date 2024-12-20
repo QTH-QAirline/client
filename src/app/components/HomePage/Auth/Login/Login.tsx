@@ -82,6 +82,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     if (validateForm()) {
       try {
         const response = await axios.post(
@@ -97,22 +98,31 @@ const Login = () => {
           }
         );
 
-        // Lấy token và customer_id từ response
-        const { token, customer_id } = response.data;
+        // Lưu thông tin đăng nhập thành công vào localStorage
+        const userData = {
+          email: formData.identifier,
+          token: response.data.token, // Hoặc thông tin cần thiết khác
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
 
-        // Lưu token và customer_id vào localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("customer_id", customer_id);
-
-        console.log("Đăng nhập thành công:", response.data);
+        // console.log("Đăng nhập thành công:", response.data);
 
         // Chuyển hướng đến trang dashboard sau khi đăng nhập thành công
+        // Chuyển hướng đến trang chủ
         router.push("/");
+
+        // Đợi một chút để đảm bảo router.push đã được thực hiện
+        setTimeout(() => {
+          window.location.reload();
+        }, 100); //reload lại trang
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(
+            
             "Lỗi đăng nhập:",
+           
             error.response?.data || error.message
+          
           );
         } else {
           console.error("Lỗi đăng nhập:", error);
