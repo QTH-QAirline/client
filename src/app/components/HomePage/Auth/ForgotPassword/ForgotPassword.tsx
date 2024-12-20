@@ -1,10 +1,25 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useState, FormEvent } from "react";
 import styles from "./ForgotPassword.module.css";
 import { LanguageContext } from "../../../../utils/LanguageContext";
 
 const ForgotPassword = () => {
   const { locale } = useContext(LanguageContext);
+  const [email, setEmail] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Giả lập gửi request (thay thế bằng API thực tế của bạn)
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setShowNotification(true);
+    setIsSubmitting(false);
+    setEmail("");
+  };
 
   return (
     <div className={styles.container}>
@@ -23,14 +38,58 @@ const ForgotPassword = () => {
         </div>
 
         <h2 className={styles.title}>
-          {locale === "en" ? "Check Your Email" : "Kiểm Tra Email"}
+          {locale === "en" ? "Forgot Password" : "Quên Mật Khẩu"}
         </h2>
 
-        <p className={styles.message}>
-          {locale === "en"
-            ? "Please check your email to reset your password."
-            : "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu."}
-        </p>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.inputWrapper}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={
+                locale === "en" ? "Enter your email" : "Nhập email của bạn"
+              }
+              required
+              className={styles.input}
+            />
+          </div>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? locale === "en"
+                ? "Sending..."
+                : "Đang gửi..."
+              : locale === "en"
+              ? "Reset Password"
+              : "Đặt Lại Mật Khẩu"}
+          </button>
+        </form>
+
+        {showNotification && (
+          <div className={styles.overlay}>
+            <div className={styles.notification}>
+              <div className={styles.notificationIcon}>✉️</div>
+              <h3 className={styles.notificationTitle}>
+                {locale === "en" ? "Check Your Email" : "Kiểm Tra Email"}
+              </h3>
+              <p className={styles.notificationMessage}>
+                {locale === "en"
+                  ? "Please check your email to reset your password."
+                  : "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu."}
+              </p>
+              <button
+                className={styles.okButton}
+                onClick={() => setShowNotification(false)}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className={styles.divider}></div>
 
