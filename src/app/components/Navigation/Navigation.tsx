@@ -33,6 +33,8 @@ const Navigation = () => {
   if (
     pathname === "/login" ||
     pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
     pathname.startsWith("/admin")
   ) {
     return null;
