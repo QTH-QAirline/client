@@ -106,7 +106,13 @@ const Login = () => {
         // console.log("Đăng nhập thành công:", response.data);
 
         // Chuyển hướng đến trang dashboard sau khi đăng nhập thành công
+        // Chuyển hướng đến trang chủ
         router.push("/");
+
+        // Đợi một chút để đảm bảo router.push đã được thực hiện
+        setTimeout(() => {
+          window.location.reload();
+        }, 100); //reload lại trang
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(

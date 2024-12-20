@@ -28,7 +28,10 @@ const Navigation = () => {
   }, []);
 
   const handleLoginClick = () => {
-    router.push("/login");
+    setTimeout(() => {
+      router.push("/login");
+    }, 500); // Dừng 0.5 giây
+
     setIsMenuOpen(false);
   };
 
@@ -36,7 +39,9 @@ const Navigation = () => {
     localStorage.removeItem("user");
     setUserData(null);
     setIsDropdownOpen(false);
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+    }, 500); // Dừng 0.5 giây
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

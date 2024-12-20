@@ -18,7 +18,9 @@ const AdminLogin = () => {
     if (username === adminData.username && password === adminData.password) {
       // Save login status to localStorage
       localStorage.setItem("isLoggedIn", "true");
-      router.push("/admin/dashboard"); // Chuyển tới Dashboard
+      setTimeout(() => {
+        router.push("/admin/dashboard"); // Chuyển tới Dashboard
+      }, 100);
     } else {
       alert("Invalid username or password.");
     }
