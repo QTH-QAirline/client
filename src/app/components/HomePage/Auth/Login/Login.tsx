@@ -10,6 +10,7 @@ import { LanguageContext } from "../../../../utils/LanguageContext";
 import { en, vi } from "../../../../utils/locales";
 import axios from "axios";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -80,11 +81,11 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (validateForm()) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/auth/customer/login",
+          BACKEND_URL+'/auth/customer/login',
           {
             email: formData.identifier,
             password: formData.password,
@@ -95,14 +96,24 @@ const Login = () => {
             },
           }
         );
-  
-        // console.log("Đăng nhập thành công:", response.data);
-  
+
+        // Lấy token và customer_id từ response
+        const { token, customer_id } = response.data;
+
+        // Lưu token và customer_id vào localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("customer_id", customer_id);
+
+        console.log("Đăng nhập thành công:", response.data);
+
         // Chuyển hướng đến trang dashboard sau khi đăng nhập thành công
-        router.push('/');
+        router.push("/");
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Lỗi đăng nhập:", error.response?.data || error.message);
+          console.error(
+            "Lỗi đăng nhập:",
+            error.response?.data || error.message
+          );
         } else {
           console.error("Lỗi đăng nhập:", error);
         }
@@ -112,7 +123,7 @@ const Login = () => {
         }));
       }
     }
-  }
+  };
 
   return (
     <div className={styles.container}>

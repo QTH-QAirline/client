@@ -2,8 +2,11 @@
 import { useContext, useState, FormEvent } from "react";
 import styles from "./ForgotPassword.module.css";
 import { LanguageContext } from "../../../../utils/LanguageContext";
-
+import axios from "axios";
+import { useRouter } from "next/navigation";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ForgotPassword = () => {
+  const router = useRouter();
   const { locale } = useContext(LanguageContext);
   const [email, setEmail] = useState("");
   const [showNotification, setShowNotification] = useState(false);
@@ -12,13 +15,26 @@ const ForgotPassword = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setShowNotification(false);
 
-    // Giả lập gửi request (thay thế bằng API thực tế của bạn)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setShowNotification(true);
-    setIsSubmitting(false);
-    setEmail("");
+    try {
+      await axios.post(
+        BACKEND_URL+'/auth/customer/forgot-password',
+        {
+          email,
+        }
+      );
+      setShowNotification(true);
+    } catch (error) {
+      console.error("Error sending forgot password request:", error);
+      alert(
+        locale === "en"
+          ? "Failed to send reset password email. Please try again."+process.env 
+          : "Gửi email đặt lại mật khẩu thất bại. Vui lòng thử lại."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -83,7 +99,10 @@ const ForgotPassword = () => {
               </p>
               <button
                 className={styles.okButton}
-                onClick={() => setShowNotification(false)}
+                onClick={() => {
+                  setShowNotification(false)
+                  router.push('/login')
+                }}
               >
                 OK
               </button>

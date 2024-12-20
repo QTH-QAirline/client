@@ -10,6 +10,8 @@ import { LanguageContext } from "../../../../utils/LanguageContext";
 import { en, vi } from "../../../../utils/locales";
 import axios from "axios";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 const Signup = () => {
   const { locale } = useContext(LanguageContext);
   const translations = locale === "en" ? en.signup : vi.signup;
@@ -140,7 +142,7 @@ const Signup = () => {
     if (validateForm()) {
       try {
         const response = await axios.post(
-          'http://localhost:4000/auth/customer/register',
+          BACKEND_URL+'/auth/customer/register',
           {
             name: formData.fullName,
             email: formData.email,

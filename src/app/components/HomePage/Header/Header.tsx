@@ -13,134 +13,18 @@ import styles from "./Header.module.css";
 import { useRouter } from "next/navigation";
 import { LanguageContext } from "../../../utils/LanguageContext";
 import { en, vi } from "../../../utils/locales";
+import axios from "axios";
 
 // Định nghĩa interface cho sân bay
 interface Airport {
-  code: string;
-  name: string;
-  city: string;
+  airport_id: number,
+  name: string,
+  location: string,
+  country: string,
+  iata_code:string
 }
 
 // Danh sách sân bay
-const airports: Airport[] = [
-  // Việt Nam
-  { code: "HAN", name: "Noi Bai International Airport", city: "Hanoi" },
-  {
-    code: "SGN",
-    name: "Tan Son Nhat International Airport",
-    city: "Ho Chi Minh City",
-  },
-  { code: "DAD", name: "Da Nang International Airport", city: "Da Nang" },
-  { code: "PQC", name: "Phu Quoc International Airport", city: "Phu Quoc" },
-  { code: "HUI", name: "Phu Bai International Airport", city: "Hue" },
-  { code: "CXR", name: "Cam Ranh International Airport", city: "Nha Trang" },
-  { code: "VCA", name: "Can Tho International Airport", city: "Can Tho" },
-  { code: "HPH", name: "Cat Bi International Airport", city: "Hai Phong" },
-
-  // Quốc tế
-  {
-    code: "BKK",
-    name: "Suvarnabhumi Airport",
-    city: "Bangkok",
-    country: "Thailand",
-  },
-  {
-    code: "KUL",
-    name: "Kuala Lumpur International Airport",
-    city: "Kuala Lumpur",
-    country: "Malaysia",
-  },
-  {
-    code: "SIN",
-    name: "Changi Airport",
-    city: "Singapore",
-    country: "Singapore",
-  },
-  {
-    code: "HKG",
-    name: "Hong Kong International Airport",
-    city: "Hong Kong",
-    country: "Hong Kong",
-  },
-  {
-    code: "ICN",
-    name: "Incheon International Airport",
-    city: "Seoul",
-    country: "South Korea",
-  },
-  {
-    code: "NRT",
-    name: "Narita International Airport",
-    city: "Tokyo",
-    country: "Japan",
-  },
-  {
-    code: "LAX",
-    name: "Los Angeles International Airport",
-    city: "Los Angeles",
-    country: "United States",
-  },
-  {
-    code: "JFK",
-    name: "John F. Kennedy International Airport",
-    city: "New York",
-    country: "United States",
-  },
-  {
-    code: "LHR",
-    name: "Heathrow Airport",
-    city: "London",
-    country: "United Kingdom",
-  },
-  {
-    code: "CDG",
-    name: "Charles de Gaulle Airport",
-    city: "Paris",
-    country: "France",
-  },
-  {
-    code: "FRA",
-    name: "Frankfurt Airport",
-    city: "Frankfurt",
-    country: "Germany",
-  },
-  {
-    code: "DXB",
-    name: "Dubai International Airport",
-    city: "Dubai",
-    country: "United Arab Emirates",
-  },
-  {
-    code: "SYD",
-    name: "Sydney Kingsford Smith Airport",
-    city: "Sydney",
-    country: "Australia",
-  },
-  {
-    code: "JNB",
-    name: "O.R. Tambo International Airport",
-    city: "Johannesburg",
-    country: "South Africa",
-  },
-  {
-    code: "GRU",
-    name: "São Paulo/Guarulhos–Governador André Franco Montoro International Airport",
-    city: "São Paulo",
-    country: "Brazil",
-  },
-  {
-    code: "DEL",
-    name: "Indira Gandhi International Airport",
-    city: "New Delhi",
-    country: "India",
-  },
-  {
-    code: "PEK",
-    name: "Beijing Capital International Airport",
-    city: "Beijing",
-    country: "China",
-  },
-].sort((a, b) => a.city.localeCompare(b.city)); // Sắp xếp sẵn danh sách theo thành phố;
 
 // Utility function to validate and format location input
 const formatLocation = (location: string) => {
@@ -157,7 +41,7 @@ const Header = () => {
 
   // Chọn bản dịch dựa trên ngôn ngữ hiện tại
   const translations = locale === "en" ? en.header : vi.header;
-
+  const [airports, setAirports] = useState<Airport[]>([]);
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const [showFromDropdown, setShowFromDropdown] = useState(false);
@@ -182,6 +66,22 @@ const Header = () => {
   );
   const [tripType, setTripType] = useState("oneWay");
   const [ticketClass, setTicketClass] = useState("business");
+
+  useEffect(() => {
+    const fetchAirports = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/airports");
+        const sortedAirports = response.data.sort((a: Airport, b: Airport) =>
+          a.iata_code.localeCompare(b.iata_code)
+        );
+        setAirports(sortedAirports);
+      } catch (error) {
+        console.error("Error fetching airports:", error);
+      }
+    };
+
+    fetchAirports();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -228,12 +128,12 @@ const Header = () => {
       .filter((airport) => {
         const searchValue = value.toLowerCase();
         return (
-          airport.code.toLowerCase().includes(searchValue) ||
+          airport.iata_code.toLowerCase().includes(searchValue) ||
           airport.name.toLowerCase().includes(searchValue) ||
-          airport.city.toLowerCase().includes(searchValue)
+          airport.location.toLowerCase().includes(searchValue)
         );
       })
-      .sort((a, b) => a.city.localeCompare(b.city));
+      .sort((a, b) => a.location.localeCompare(b.location));
   };
 
   const handleFromLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,7 +151,7 @@ const Header = () => {
   };
 
   const handleAirportSelect = (airport: Airport, isFrom: boolean) => {
-    const value = `${airport.code} - ${airport.city}`;
+    const value = `${airport.iata_code} - ${airport.location}`;
     if (isFrom) {
       setFromLocation(value);
       setShowFromDropdown(false); // Ẩn dropdown sau khi chọn
@@ -334,12 +234,12 @@ const Header = () => {
                   <div className={styles.dropdown}>
                     {filteredFromAirports.map((airport) => (
                       <div
-                        key={airport.code}
+                        key={airport.iata_code}
                         className={styles.dropdownItem}
                         onClick={() => handleAirportSelect(airport, true)}
                       >
                         <div className={styles.airportCode}>
-                          {airport.code} - {airport.city}
+                          {airport.iata_code} - {airport.location}
                         </div>
                         <div className={styles.airportName}>{airport.name}</div>
                       </div>
@@ -371,12 +271,12 @@ const Header = () => {
                   <div className={styles.dropdown}>
                     {filteredToAirports.map((airport) => (
                       <div
-                        key={airport.code}
+                        key={airport.iata_code}
                         className={styles.dropdownItem}
                         onClick={() => handleAirportSelect(airport, false)}
                       >
                         <div className={styles.airportCode}>
-                          {airport.code} - {airport.city}
+                          {airport.iata_code} - {airport.location}
                         </div>
                         <div className={styles.airportName}>{airport.name}</div>
                       </div>
