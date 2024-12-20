@@ -80,7 +80,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (validateForm()) {
       try {
         const response = await axios.post(
@@ -95,14 +95,24 @@ const Login = () => {
             },
           }
         );
-  
+
+        // Lưu thông tin đăng nhập thành công vào localStorage
+        const userData = {
+          email: formData.identifier,
+          token: response.data.token, // Hoặc thông tin cần thiết khác
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
+
         // console.log("Đăng nhập thành công:", response.data);
-  
+
         // Chuyển hướng đến trang dashboard sau khi đăng nhập thành công
-        router.push('/');
+        router.push("/");
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Lỗi đăng nhập:", error.response?.data || error.message);
+          console.error(
+            "Lỗi đăng nhập:",
+            error.response?.data || error.message
+          );
         } else {
           console.error("Lỗi đăng nhập:", error);
         }
@@ -112,7 +122,7 @@ const Login = () => {
         }));
       }
     }
-  }
+  };
 
   return (
     <div className={styles.container}>

@@ -1,24 +1,42 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useContext, useEffect } from "react";
+import { Menu, X, LogOut, ChevronDown } from "lucide-react";
 import styles from "./Navigation.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import logoImage from "/public/images/logo.png";
 import { en, vi } from "../../utils/locales";
-import { useContext } from "react";
 import { LanguageContext } from "../../utils/LanguageContext";
 
 const Navigation = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { locale, setLocale, translations } = useContext(LanguageContext);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userData, setUserData] = useState<{
+    email: string;
+    token: string;
+  } | null>(null);
+  const { locale, setLocale } = useContext(LanguageContext);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleLoginClick = () => {
     router.push("/login");
     setIsMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUserData(null);
+    setIsDropdownOpen(false);
+    router.push("/");
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -29,7 +47,10 @@ const Navigation = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Không hiển thị Navigation trong trang login / signup và admin
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   if (
     pathname === "/login" ||
     pathname === "/signup" ||
@@ -44,7 +65,7 @@ const Navigation = () => {
     <nav className={styles.navigation}>
       <div className={styles.navContainer}>
         <div className={styles.navLeft}>
-          <Link href="http://localhost:3000" className={styles.logoLink}>
+          <Link href="/" className={styles.logoLink}>
             <div className={styles.logo}>
               <Image
                 src={logoImage}
@@ -57,7 +78,6 @@ const Navigation = () => {
             </div>
           </Link>
 
-          {/* Navigation Links bên cạnh logo */}
           <div className={styles.navLinks}>
             <button
               className={`${styles.navButton} ${
@@ -80,7 +100,6 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* Desktop Right Menu */}
         <div className={styles.desktopMenu}>
           <select
             className={styles.languageSelect}
@@ -90,12 +109,37 @@ const Navigation = () => {
             <option value="en">{en.navigation.language}</option>
             <option value="vi">{vi.navigation.language}</option>
           </select>
-          <button className={styles.loginButton} onClick={handleLoginClick}>
-            {locale === "en" ? en.navigation.login : vi.navigation.login}
-          </button>
+
+          {userData ? (
+            <div className={styles.userMenu}>
+              <button onClick={toggleDropdown} className={styles.avatarButton}>
+                <div className={styles.avatar}>
+                  {userData.email.charAt(0).toUpperCase()}
+                </div>
+                <ChevronDown className={styles.chevronIcon} />
+              </button>
+              {isDropdownOpen && (
+                <div className={styles.dropdown}>
+                  <div className={styles.dropdownEmail}>
+                    <p>{userData.email}</p>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className={styles.logoutButton}
+                  >
+                    <LogOut className={styles.logoutIcon} />
+                    {locale === "en" ? "Logout" : "Đăng xuất"}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button className={styles.loginButton} onClick={handleLoginClick}>
+              {locale === "en" ? en.navigation.login : vi.navigation.login}
+            </button>
+          )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button className={styles.menuButton} onClick={toggleMenu}>
           {isMenuOpen ? (
             <X className={styles.menuIcon} />
@@ -105,7 +149,6 @@ const Navigation = () => {
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
         <div className={styles.mobileMenu}>
           <select
@@ -116,9 +159,25 @@ const Navigation = () => {
             <option value="en">{en.navigation.language}</option>
             <option value="vi">{vi.navigation.language}</option>
           </select>
-          <button className={styles.loginButton} onClick={handleLoginClick}>
-            {locale === "en" ? en.navigation.login : vi.navigation.login}
-          </button>
+          {userData ? (
+            <div className={styles.mobileUserMenu}>
+              <div className={styles.mobileAvatar}>
+                {userData.email.charAt(0).toUpperCase()}
+              </div>
+              <p className={styles.mobileEmail}>{userData.email}</p>
+              <button
+                onClick={handleLogout}
+                className={styles.mobileLogoutButton}
+              >
+                <LogOut className={styles.logoutIcon} />
+                {locale === "en" ? "Logout" : "Đăng xuất"}
+              </button>
+            </div>
+          ) : (
+            <button className={styles.loginButton} onClick={handleLoginClick}>
+              {locale === "en" ? en.navigation.login : vi.navigation.login}
+            </button>
+          )}
         </div>
       )}
     </nav>
