@@ -34,7 +34,11 @@ interface FlightData {
   pricing: {
     economy: {
       availability: string;
-      price: number | null;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
     };
     business: {
       availability: string;
@@ -128,7 +132,11 @@ const FlightInfo: React.FC = () => {
         pricing: {
           economy: {
             availability: "Multiple seats",
-            price: 1850000,
+            price: {
+              currency: "VND",
+              amount: 1850000,
+              perPerson: true,
+            },
           },
           business: {
             availability: "3 seats left",
@@ -177,7 +185,11 @@ const FlightInfo: React.FC = () => {
         pricing: {
           economy: {
             availability: "Multiple seats",
-            price: 2350000,
+            price: {
+              currency: "VND",
+              amount: 2350000,
+              perPerson: true,
+            },
           },
           business: {
             availability: "1 seat left",
@@ -225,8 +237,12 @@ const FlightInfo: React.FC = () => {
         ],
         pricing: {
           economy: {
-            availability: "Multiple seats",
-            price: 1650000,
+            availability: "Not available",
+            price: {
+              currency: "VND",
+              amount: 0,
+              perPerson: true,
+            },
           },
           business: {
             availability: "Not available",
@@ -275,7 +291,11 @@ const FlightInfo: React.FC = () => {
         pricing: {
           economy: {
             availability: "Multiple seats",
-            price: 1750000,
+            price: {
+              currency: "VND",
+              amount: 1750000,
+              perPerson: true,
+            },
           },
           business: {
             availability: "4 seats left",
@@ -344,7 +364,7 @@ const FlightInfo: React.FC = () => {
     const selectedClass = selectedClasses[index];
     const canProcessBooking =
       selectedClass &&
-      ((selectedClass === "economy" && pricing.economy.price) ||
+      ((selectedClass === "economy" && pricing.economy.price?.amount) ||
         (selectedClass === "business" && pricing.business.price?.amount) ||
         (selectedClass === "firstClass" && pricing.firstClass.price?.amount));
 
@@ -417,16 +437,24 @@ const FlightInfo: React.FC = () => {
                 value="economy"
                 checked={selectedClass === "economy"}
                 onChange={() => handleClassChange("economy")}
-                disabled={!pricing.economy.price}
+                disabled={!pricing.economy.price?.amount}
               />
               <span>{translateFlightClass("Economy")}</span>
             </label>
             <div className={styles.availability}>
-              {localizeAvailability(pricing.economy.availability, "")}
+              {localizeAvailability(
+                pricing.economy.availability,
+                translations.flightSearch.pricing.notAvailable
+              )}
             </div>
-            {pricing.economy.price && (
+            {pricing.economy.price?.amount > 0 ? (
               <div className={styles.price}>
-                {pricing.economy.price.toLocaleString()} VND
+                {pricing.economy.price.amount.toLocaleString()}{" "}
+                {pricing.economy.price.currency}
+              </div>
+            ) : (
+              <div className={styles.unavailable}>
+                {translations.flightSearch.pricing.notAvailable}
               </div>
             )}
           </div>
@@ -523,7 +551,7 @@ const FlightInfo: React.FC = () => {
       if (selectedSort === "price") {
         const getLowestPrice = (pricing: FlightData["pricing"]) => {
           const prices = [
-            pricing.economy.price || Infinity,
+            pricing.economy.price?.amount || Infinity,
             pricing.business.price?.amount || Infinity,
             pricing.firstClass.price?.amount || Infinity,
           ];

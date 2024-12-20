@@ -25,9 +25,29 @@ interface FlightDetails {
     flightNumber: string;
   }[];
   pricing: {
-    [key: string]: {
-      price: number;
-      currency: string;
+    economy: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
+    };
+    business: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
+    };
+    firstClass: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
     };
   };
 }
@@ -191,6 +211,27 @@ const SeatBooking: React.FC = () => {
 
   const handleConfirmation = () => {
     if (!selectedSeat || !flightDetails) return;
+
+    // Chuẩn hóa dữ liệu pricing
+    const normalizedPricing = {
+      economy: {
+        price: flightDetails.pricing.economy.price.amount || 0,
+        currency: flightDetails.pricing.economy.price.currency || "VND",
+      },
+      business: {
+        price: flightDetails.pricing.business.price.amount || 0,
+        currency: flightDetails.pricing.business.price.currency || "VND",
+      },
+      firstClass: {
+        price: flightDetails.pricing.firstClass.price.amount || 0,
+        currency: flightDetails.pricing.firstClass.price.currency || "VND",
+      },
+    };
+
+    const normalizedFlightDetails = {
+      ...flightDetails,
+      pricing: normalizedPricing,
+    };
 
     const bookingData = {
       flightDetails,

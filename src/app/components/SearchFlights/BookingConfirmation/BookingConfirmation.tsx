@@ -26,9 +26,29 @@ interface FlightDetails {
     flightNumber: string;
   }[];
   pricing: {
-    [key: string]: {
-      price: number;
-      currency: string;
+    economy: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
+    };
+    business: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
+    };
+    firstClass: {
+      availability: string;
+      price: {
+        currency: string;
+        amount: number;
+        perPerson: boolean;
+      };
     };
   };
 }
@@ -164,7 +184,26 @@ const BookingConfirmation: React.FC = () => {
   if (!bookingDetails) return <div>{translations.loading}</div>;
 
   const { flightDetails, selectedClass, selectedSeat } = bookingDetails;
-  const price = flightDetails.pricing[selectedClass];
+  // const selectedPricing = flightDetails.pricing[selectedClass.toLowerCase()];
+  // const price = flightDetails.pricing[selectedClass];
+
+  // Lấy thông tin giá vé dựa trên class đã chọn
+  const getPrice = () => {
+    const classKey = selectedClass;
+    const pricing =
+      flightDetails.pricing[classKey as keyof typeof flightDetails.pricing];
+
+    if (pricing && pricing.price) {
+      return {
+        amount: pricing.price.amount,
+        currency: pricing.price.currency,
+      };
+    }
+
+    return { amount: 0, currency: "N/A" }; // Giá mặc định nếu không tìm thấy
+  };
+
+  const selectedPricing = getPrice();
 
   return (
     <div className={styles.bookingContainer}>
@@ -260,7 +299,7 @@ const BookingConfirmation: React.FC = () => {
         <div className={styles.priceSection}>
           <span className={styles.priceLabel}>{translations.price}</span>
           <span className={styles.priceValue}>
-            {price.price.toLocaleString()} {price.currency}
+            {selectedPricing.amount.toLocaleString()} {selectedPricing.currency}
           </span>
         </div>
       </div>

@@ -410,3 +410,146 @@
     background-color: #f0fdfa;
   }
 }
+
+/* Add these new styles to your existing CSS file */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  margin-top: 4px;
+}
+
+.dropdownItem {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+.airportCode {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.airportName {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Modify existing styles */
+.inputGroup {
+  position: relative; /* Add this to properly position the dropdown */
+}
+
+/* Add media queries for responsive dropdown */
+@media (max-width: 768px) {
+  .dropdown {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1000;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+  .dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 60vh;
+    border-radius: 1rem 1rem 0 0;
+    border-bottom: none;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 60vh;
+    border-radius: 1rem 1rem 0 0;
+    border-bottom: none;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .dropdownItem {
+    padding: 0.875rem;
+  }
+
+  .airportCode {
+    font-size: 0.875rem;
+  }
+
+  .airportName {
+    font-size: 0.8125rem;
+  }
+
+  .tripTypeSelector {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .radioLabel {
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: #f8fafc;
+    border-radius: 0.75rem;
+  }
+
+  .ticketClassSelector {
+    flex-wrap: wrap;
+  }
+
+  .classButton {
+    flex: 1 1 calc(50% - 0.25rem);
+    padding: 0.625rem 1rem;
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .searchButton {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  /* Optimize for touch interactions */
+  .dropdownItem,
+  .radioLabel,
+  .classButton,
+  .searchButton {
+    min-height: 44px; /* Minimum touch target size */
+  }
+}
