@@ -8,6 +8,7 @@ import Image from "next/image";
 import logoImage from "/public/images/logo.png";
 import { LanguageContext } from "../../../../utils/LanguageContext";
 import { en, vi } from "../../../../utils/locales";
+import axios from "axios";
 
 const Signup = () => {
   const { locale } = useContext(LanguageContext);
@@ -133,14 +134,41 @@ const Signup = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (validateForm()) {
-      // Add your signup logic here
-      console.log("Signup attempt with:", formData);
-      // After successful signup, redirect to login
-      // router.push('/login');
+      try {
+        const response = await axios.post(
+          'http://localhost:4000/auth/customer/register',
+          {
+            name: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        console.log('Đăng ký thành công:', response.data);
+  
+        // Chuyển hướng đến trang login sau khi đăng ký thành công
+        router.push('/login');
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('Lỗi đăng ký:', error.response?.data?.error || error.message);
+          setErrors((prev) => ({
+            ...prev,
+            email: error.response?.data?.error || 'Đăng ký thất bại. Vui lòng thử lại.',
+          }));
+        } else {
+          console.error('Lỗi không xác định:', error);
+        }
+      }
     }
   };
 
