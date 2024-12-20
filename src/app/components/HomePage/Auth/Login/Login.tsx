@@ -8,6 +8,7 @@ import Image from "next/image";
 import logoImage from "/public/images/logo.png";
 import { LanguageContext } from "../../../../utils/LanguageContext";
 import { en, vi } from "../../../../utils/locales";
+import axios from "axios";
 
 const Login = () => {
   const router = useRouter();
@@ -77,15 +78,41 @@ const Login = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (validateForm()) {
-      console.log("Login attempt with:", formData);
-      // Add your login logic here
-      // router.push('/dashboard');
+      try {
+        const response = await axios.post(
+          "http://localhost:4000/auth/customer/login",
+          {
+            email: formData.identifier,
+            password: formData.password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        // console.log("Đăng nhập thành công:", response.data);
+  
+        // Chuyển hướng đến trang dashboard sau khi đăng nhập thành công
+        router.push('/');
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Lỗi đăng nhập:", error.response?.data || error.message);
+        } else {
+          console.error("Lỗi đăng nhập:", error);
+        }
+        setErrors((prev) => ({
+          ...prev,
+          identifier: "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.",
+        }));
+      }
     }
-  };
+  }
 
   return (
     <div className={styles.container}>
