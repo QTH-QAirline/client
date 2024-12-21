@@ -108,12 +108,12 @@
 }
 
 .viewMoreButton {
-  background-color: #048b99;
+  background-color: #1976d2;
   color: white;
 }
 
 .viewMoreButton:hover {
-  background-color: #0056b3;
+  background-color: #1565c0;
 }
 
 .viewMoreButton:active {
