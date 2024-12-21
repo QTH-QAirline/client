@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -11,7 +11,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import styles from "./Dashboard.module.css";
+import { useRouter } from "next/navigation";
 
+
+
+interface DashboardData {
+  completedFlights: number;
+  activeFlights: number;
+  cancelledFlights: number;
+  revenue: string;
+  ticketsSold: number;
+}
 // Mock data giữ nguyên như cũ...
 const weeklyData = [
   { day: "Monday", tickets: 120 },
@@ -64,9 +74,56 @@ const promotions = [
     status: "Coming Soon",
   },
 ];
+// Hàm fetch API có xử lý token hết hạn
+const fetchWithAuth = async (url: string, router: any, options: RequestInit = {}) => {
+  const token = localStorage.getItem("token");
+
+  const headers = {
+    ...options.headers,
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(url, { ...options, headers });
+
+  if (response.status === 401) {
+    // Xử lý khi token hết hạn
+    alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    router.push("/admin/login"); // Điều hướng về trang đăng nhập
+    return null;
+  }
+
+  return response;
+};
 
 const Dashboard: React.FC = () => {
   const [chartView, setChartView] = useState<"weekly" | "yearly">("weekly");
+
+  const [data, setData] = useState<DashboardData | null>(null);
+  const router = useRouter();
+  // Lấy dữ liệu từ backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!backendUrl) throw new Error("Backend URL is not configured.");
+
+        const response = await fetchWithAuth(`${backendUrl}/auth/admin/dashboard`, router, {
+          method: "GET",
+        });
+
+        if (response) {
+          // const result: DashboardData = await response.json();
+          // setData(result);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
+
+    fetchData();
+  }, [router]);
 
   return (
     <div className={styles.dashboard}>

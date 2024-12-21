@@ -101,7 +101,8 @@ const Login = () => {
         // Lưu thông tin đăng nhập thành công vào localStorage
         const userData = {
           email: formData.identifier,
-          token: response.data.token, // Hoặc thông tin cần thiết khác
+          token: response.data.token,
+          customer_id:response.data.customer_id // Hoặc thông tin cần thiết khác
         };
         localStorage.setItem("user", JSON.stringify(userData));
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import adminLoginData from "../../../../../public/data/admin_login.json";
 import styles from "./AdminLogin.module.css";
+import axios from "axios";
 
 const AdminLogin = () => {
   const [username, setUsername] = useState("");
@@ -12,17 +13,40 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleLogin = () => {
-    // Check login credentials against admin_login.json data
-    const adminData = adminLoginData.admin[0];
-    if (username === adminData.username && password === adminData.password) {
-      // Save login status to localStorage
-      localStorage.setItem("isLoggedIn", "true");
-      setTimeout(() => {
-        router.push("/admin/dashboard"); // Chuyển tới Dashboard
-      }, 100);
-    } else {
-      alert("Invalid username or password.");
+  const handleLogin = async () => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL; // Lấy URL từ biến môi trường
+
+      if (!backendUrl) {
+        throw new Error("Backend URL is not configured.");
+      }
+
+      const response = await axios.post(
+        `${backendUrl}/auth/admin/login`,
+        { email:username, password }, // Dữ liệu gửi đi
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const { token } = response.data; // Lấy token từ response
+        localStorage.setItem("token", token); // Lưu token vào localStorage
+        localStorage.setItem("isLoggedIn", "true"); // Lưu trạng thái đăng nhập
+        router.push("/admin/dashboard");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Nếu lỗi đến từ axios
+        const errorMessage =
+          error.response?.data?.message || "Invalid username or password.";
+        alert(errorMessage + JSON.stringify({ username, password }));
+      } else {
+        // Lỗi khác
+        alert("Something went wrong. Please try again later.");
+      }
     }
   };
 

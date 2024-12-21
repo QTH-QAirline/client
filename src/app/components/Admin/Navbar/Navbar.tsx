@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "./Navbar.module.css";
 import logoImage from "/public/images/logo.png";
@@ -21,11 +21,21 @@ import {
   X,
 } from "lucide-react";
 
+
 const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [showLogout, setShowLogout] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+  
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    setShowLogout(false); // Đóng menu
+    router.push("/admin");
+  };
+  
 
   // Detect screen size
   useEffect(() => {
@@ -135,14 +145,13 @@ const Navbar: React.FC = () => {
           <span className={styles.username}>Admin</span>
 
           {showLogout && (
-            <div className={styles.logoutButton}>
-              <Link href="/admin">
-                <div className="flex items-center">
-                  <LogOut size={16} className="mr-2" />
-                  Log out
-                </div>
-              </Link>
+            <div className={styles.logoutButton} onClick={handleLogout}>
+            <div className="flex items-center">
+              <LogOut size={16} className="mr-2" />
+              Log out
             </div>
+          </div>
+          
           )}
         </div>
       </div>
