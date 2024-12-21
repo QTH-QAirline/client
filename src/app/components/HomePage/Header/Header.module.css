@@ -1,6 +1,7 @@
 .container {
   width: 100%;
-  background: linear-gradient(to right, #0a2043, #6366f1);
+  /* background: linear-gradient(to right, #0a2043, #6366f1); */
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
   margin-top: 50px;
   /* Thêm margin-top bằng với chiều cao của navigation */
 }

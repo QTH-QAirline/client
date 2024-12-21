@@ -40,7 +40,7 @@ export const en = {
       "Planning your next international adventure? Type in your destination.",
     fromLabel: "From",
     fromInput: "Your destination",
-    searchButton: "searchButton",
+    searchButton: "Search",
     priceFrom: "From",
     moreButton: "View more destinations",
     lessButton: "Show less",

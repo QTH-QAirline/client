@@ -13,12 +13,16 @@
   display: none;
   cursor: pointer;
   color: #fff;
+  width: 24px;
 }
 
 .pageTitle {
   font-size: 1.5rem;
   font-weight: bold;
   color: #fff;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .searchContainer {
@@ -53,8 +57,10 @@
 }
 
 .userInfo {
+  width: 24px; /* Add same width as mobileMenuToggle */
   display: flex;
-  align-items: center;
+  justify-content: flex-end; /* Align to right */
+  margin-left: auto; /* Push to right */
 }
 
 .userProfile {
@@ -211,6 +217,8 @@
   }
 
   .pageTitle {
+    position: static; /* Reset position for mobile */
+    transform: none; /* Reset transform for mobile */
     order: 0;
     flex-grow: 1;
     text-align: center;
@@ -225,6 +233,7 @@
 
   .userInfo {
     order: 1;
+    width: auto;
   }
 }
 

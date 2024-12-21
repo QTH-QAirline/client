@@ -21,21 +21,19 @@ import {
   X,
 } from "lucide-react";
 
-
 const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [showLogout, setShowLogout] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
-  
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     setShowLogout(false); // Đóng menu
     router.push("/admin");
   };
-  
 
   // Detect screen size
   useEffect(() => {
@@ -122,14 +120,14 @@ const Navbar: React.FC = () => {
       <div className={styles.pageTitle}>{currentTitle}</div>
 
       {/* Search Container */}
-      <div className={styles.searchContainer}>
+      {/* <div className={styles.searchContainer}>
         <Search className={styles.searchIcon} />
         <input
           type="text"
           placeholder="Search..."
           className={styles.searchInput}
         />
-      </div>
+      </div> */}
 
       {/* User Profile and Logout */}
       <div className={styles.userInfo}>
@@ -146,12 +144,11 @@ const Navbar: React.FC = () => {
 
           {showLogout && (
             <div className={styles.logoutButton} onClick={handleLogout}>
-            <div className="flex items-center">
-              <LogOut size={16} className="mr-2" />
-              Log out
+              <div className="flex items-center">
+                <LogOut size={16} className="mr-2" />
+                Log out
+              </div>
             </div>
-          </div>
-          
           )}
         </div>
       </div>

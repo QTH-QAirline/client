@@ -5,6 +5,7 @@ import styles from "./Deals.module.css";
 // Kiểu dữ liệu cho Deals
 interface Deal {
   id: string;
+  flight_id: string; // Added flight_id
   title: string;
   description: string;
   type: "seasonal" | "route-specific";
@@ -28,6 +29,7 @@ const DealsAndNews: React.FC = () => {
   const [deals, setDeals] = useState<Deal[]>([
     {
       id: "1",
+      flight_id: "FL001", // Added flight_id
       title: "Summer Vacation Discount",
       description: "Special 20% off for summer routes",
       type: "seasonal",
@@ -149,6 +151,7 @@ const DealsAndNews: React.FC = () => {
         <table className={styles.dataTable}>
           <thead>
             <tr>
+              <th>Flight ID</th>
               <th>Title</th>
               <th>Type</th>
               <th>Start Date</th>
@@ -160,6 +163,7 @@ const DealsAndNews: React.FC = () => {
           <tbody>
             {deals.map((deal) => (
               <tr key={deal.id}>
+                <td>{deal.flight_id}</td>
                 <td>{deal.title}</td>
                 <td>
                   {deal.type === "seasonal" ? "Seasonal" : "Route-Specific"}
@@ -243,6 +247,14 @@ const DealsAndNews: React.FC = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h3>{editingDealId ? "Edit Promotion" : "Add Promotion"}</h3>
+            <input
+              type="text"
+              placeholder="Flight ID"
+              value={newDeal.flight_id || ""}
+              onChange={(e) =>
+                setNewDeal({ ...newDeal, flight_id: e.target.value })
+              }
+            />
             <input
               type="text"
               placeholder="Promotion Title"

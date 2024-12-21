@@ -4,8 +4,7 @@ import styles from "./Schedule.module.css";
 
 interface Flight {
   id: string;
-  flightNumber: string;
-  aircraft: string;
+  aircraft_id: string;
   departureCity: string;
   arrivalCity: string;
   departureDate: string;
@@ -13,14 +12,15 @@ interface Flight {
   departureTime: string;
   arrivalTime: string;
   status: "onTime" | "delayed";
+  delayReason?: string; // Thêm trường lý do delay
+  basePrice: number;
 }
 
 const Schedule: React.FC = () => {
   const [flights, setFlights] = useState<Flight[]>([
     {
       id: "F001",
-      flightNumber: "FL123",
-      aircraft: "Boeing 737",
+      aircraft_id: "Boeing 737",
       departureCity: "New York",
       arrivalCity: "Los Angeles",
       departureDate: "2024-06-15",
@@ -28,11 +28,11 @@ const Schedule: React.FC = () => {
       departureTime: "09:00",
       arrivalTime: "12:00",
       status: "onTime",
+      basePrice: 500,
     },
     {
       id: "F002",
-      flightNumber: "FL456",
-      aircraft: "Airbus A320",
+      aircraft_id: "Airbus A320",
       departureCity: "Chicago",
       arrivalCity: "Miami",
       departureDate: "2024-06-15",
@@ -40,11 +40,11 @@ const Schedule: React.FC = () => {
       departureTime: "14:30",
       arrivalTime: "17:45",
       status: "onTime",
+      basePrice: 500,
     },
     {
       id: "F003",
-      flightNumber: "FL789",
-      aircraft: "Boeing 777",
+      aircraft_id: "Boeing 777",
       departureCity: "San Francisco",
       arrivalCity: "Seattle",
       departureDate: "2024-06-15",
@@ -52,49 +52,87 @@ const Schedule: React.FC = () => {
       departureTime: "20:15",
       arrivalTime: "22:30",
       status: "onTime",
+      basePrice: 500,
     },
   ]);
 
   const [delayedFlight, setDelayedFlight] = useState<Flight | null>(null);
-  const [newDepartureTime, setNewDepartureTime] = useState("");
+  // const [newDepartureTime, setNewDepartureTime] = useState("");
+  const [delayMinutes, setDelayMinutes] = useState<number>(0);
+  const [delayReason, setDelayReason] = useState(""); // State mới cho lý do delay
   const [newDepartureDate, setNewDepartureDate] = useState("");
   const [newArrivalDate, setNewArrivalDate] = useState("");
 
   const [newFlight, setNewFlight] = useState<Partial<Flight>>({
-    flightNumber: "",
-    aircraft: "",
+    aircraft_id: "",
     departureCity: "",
     arrivalCity: "",
     departureDate: "",
     arrivalDate: "",
     departureTime: "",
     arrivalTime: "",
+    basePrice: 0,
   });
+
+  const validateDates = (
+    depDate: string,
+    arrDate: string,
+    depTime: string,
+    arrTime: string
+  ): boolean => {
+    const departure = new Date(`${depDate}T${depTime}`);
+    const arrival = new Date(`${arrDate}T${arrTime}`);
+    return departure < arrival;
+  };
 
   const handleDelayFlight = (flight: Flight) => {
     setDelayedFlight(flight);
-    setNewDepartureTime(flight.departureTime);
+    setDelayMinutes(0); // Reset số phút delay về 0
+    setDelayReason(flight.delayReason || ""); // Reset lý do delay thành rỗng nếu chưa có
   };
 
   const handleSaveDelay = () => {
-    if (delayedFlight) {
-      setFlights(
-        flights.map((f) =>
-          f.id === delayedFlight.id
-            ? { ...f, departureTime: newDepartureTime, status: "delayed" }
-            : f
-        )
-      );
-      setDelayedFlight(null);
-      setNewDepartureTime("");
-    }
+    if (!delayedFlight || !delayReason || delayMinutes <= 0) return;
+
+    const newTimes = calculateNewTimes(delayedFlight, delayMinutes);
+
+    setFlights(
+      flights.map((f) =>
+        f.id === delayedFlight.id
+          ? {
+              ...f,
+              departureDate: newTimes.newDepartureDate,
+              departureTime: newTimes.newDepartureTime,
+              arrivalDate: newTimes.newArrivalDate,
+              arrivalTime: newTimes.newArrivalTime,
+              status: "delayed",
+              delayReason: delayReason,
+            }
+          : f
+      )
+    );
+
+    setDelayedFlight(null);
+    setDelayMinutes(0);
+    setDelayReason("");
   };
 
   const handleAddFlight = () => {
+    if (
+      !validateDates(
+        newFlight.departureDate!,
+        newFlight.arrivalDate!,
+        newFlight.departureTime!,
+        newFlight.arrivalTime!
+      )
+    ) {
+      alert("Thời gian đến phải sau thời gian khởi hành!");
+      return;
+    }
+
     const newFlightData: Flight = {
       id: `F${flights.length + 1}`,
-      flightNumber: newFlight.flightNumber!,
-      aircraft: newFlight.aircraft!,
+      aircraft_id: newFlight.aircraft_id!,
       departureCity: newFlight.departureCity!,
       arrivalCity: newFlight.arrivalCity!,
       departureDate: newFlight.departureDate!,
@@ -102,18 +140,63 @@ const Schedule: React.FC = () => {
       departureTime: newFlight.departureTime!,
       arrivalTime: newFlight.arrivalTime!,
       status: "onTime",
+      basePrice: newFlight.basePrice!,
     };
     setFlights([...flights, newFlightData]);
     setNewFlight({
-      flightNumber: "",
-      aircraft: "",
+      aircraft_id: "",
       departureCity: "",
       arrivalCity: "",
       departureDate: "",
       arrivalDate: "",
       departureTime: "",
       arrivalTime: "",
+      basePrice: 0,
     });
+  };
+
+  const calculateNewTimes = (flight: Flight, delayMinutes: number) => {
+    // Create Date objects for departure and arrival times
+    const departure = new Date(
+      `${flight.departureDate}T${flight.departureTime}`
+    );
+    const arrival = new Date(`${flight.arrivalDate}T${flight.arrivalTime}`);
+
+    // Calculate original flight duration in minutes
+    const originalFlightDuration =
+      (arrival.getTime() - departure.getTime()) / (1000 * 60);
+
+    // Add delay to departure time
+    const newDeparture = new Date(
+      departure.getTime() + delayMinutes * 60 * 1000
+    );
+
+    // Calculate new arrival time by adding original flight duration to new departure time
+    const newArrival = new Date(
+      newDeparture.getTime() + originalFlightDuration * 60 * 1000
+    );
+
+    // Format dates - handle year, month, day properly
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    // Format times with proper hour/minute handling
+    const formatTime = (date: Date) => {
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    };
+
+    return {
+      newDepartureDate: formatDate(newDeparture),
+      newDepartureTime: formatTime(newDeparture),
+      newArrivalDate: formatDate(newArrival),
+      newArrivalTime: formatTime(newArrival),
+    };
   };
 
   const handleDeleteFlight = (id: string) => {
@@ -126,7 +209,7 @@ const Schedule: React.FC = () => {
 
       <div className={styles.newFlightForm}>
         <h2>Add New Flight</h2>
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label htmlFor="flightNumber">Flight Number:</label>
           <input
             type="text"
@@ -136,15 +219,26 @@ const Schedule: React.FC = () => {
               setNewFlight({ ...newFlight, flightNumber: e.target.value })
             }
           />
-        </div>
+        </div> */}
         <div className={styles.formGroup}>
-          <label htmlFor="aircraft">Aircraft:</label>
+          <label htmlFor="aircraft_id">Aircraft ID:</label>
           <input
             type="text"
-            id="aircraft"
-            value={newFlight.aircraft}
+            id="aircraft_id"
+            value={newFlight.aircraft_id}
             onChange={(e) =>
-              setNewFlight({ ...newFlight, aircraft: e.target.value })
+              setNewFlight({ ...newFlight, aircraft_id: e.target.value })
+            }
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="basePrice">Base Price:</label>
+          <input
+            type="number"
+            id="basePrice"
+            value={newFlight.basePrice}
+            onChange={(e) =>
+              setNewFlight({ ...newFlight, basePrice: Number(e.target.value) })
             }
           />
         </div>
@@ -222,8 +316,7 @@ const Schedule: React.FC = () => {
       <table className={styles.flightTable}>
         <thead>
           <tr>
-            <th>Flight Number</th>
-            <th>Aircraft</th>
+            <th>Aircraft_ID</th>
             <th>Departure</th>
             <th>Arrival</th>
             <th>Departure Date</th>
@@ -231,14 +324,14 @@ const Schedule: React.FC = () => {
             <th>Departure Time</th>
             <th>Arrival Time</th>
             <th>Status</th>
+            <th>Delay Reason</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {flights.map((flight) => (
             <tr key={flight.id}>
-              <td>{flight.flightNumber}</td>
-              <td>{flight.aircraft}</td>
+              <td>{flight.aircraft_id}</td>
               <td>{flight.departureCity}</td>
               <td>{flight.arrivalCity}</td>
               <td>{flight.departureDate}</td>
@@ -256,6 +349,7 @@ const Schedule: React.FC = () => {
                   {flight.status}
                 </span>
               </td>
+              <td>{flight.delayReason || "-"}</td>
               <td>
                 {
                   <button
@@ -281,23 +375,43 @@ const Schedule: React.FC = () => {
         <div className={styles.delayModal}>
           <h2>Delay Flight</h2>
           <p>
-            Flight Number: {delayedFlight.flightNumber} (
+            Flight Number: {delayedFlight.aircraft_id} (
             {delayedFlight.departureCity}- {delayedFlight.arrivalCity})
           </p>
-          <label htmlFor="newDepartureTime">New Departure Time:</label>
+          <label htmlFor="delayMinutes">Number of minutes delay</label>
           <input
-            type="time"
-            id="newDepartureTime"
-            value={newDepartureTime}
-            onChange={(e) => setNewDepartureTime(e.target.value)}
+            type="number"
+            id="delayMinutes"
+            value={delayMinutes}
+            onChange={(e) => setDelayMinutes(Number(e.target.value))}
+            min="1"
           />
+          <div className={styles.modalFormGroup}>
+            <label htmlFor="delayReason">Reason for delay:</label>
+            <textarea
+              id="delayReason"
+              value={delayReason}
+              onChange={(e) => setDelayReason(e.target.value)}
+              rows={3}
+              placeholder="Type reason for delay..."
+              className={styles.delayReasonInput}
+            />
+          </div>
           <div className={styles.modalActions}>
-            <button className={styles.saveButton} onClick={handleSaveDelay}>
+            <button
+              className={styles.saveButton}
+              onClick={handleSaveDelay}
+              disabled={!delayReason.trim() || delayMinutes <= 0}
+            >
               Save
             </button>
             <button
               className={styles.cancelButton}
-              onClick={() => setDelayedFlight(null)}
+              onClick={() => {
+                setDelayedFlight(null);
+                setDelayMinutes(0);
+                setDelayReason("");
+              }}
             >
               Cancel
             </button>

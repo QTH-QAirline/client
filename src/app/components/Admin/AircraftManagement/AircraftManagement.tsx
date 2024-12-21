@@ -3,36 +3,32 @@ import React, { useState } from "react";
 import styles from "./AircraftManagement.module.css";
 
 interface Aircraft {
-  id: string;
+  id: number; // để không xóa nhầm
   manufacturer: string;
   model: string;
   yearManufactured: number;
-  registrationNumber: string;
   seatConfiguration: {
     economyClass: number;
     businessClass: number;
     firstClass: number;
   };
-  status: "Active" | "Inactive" | "Maintenance";
 }
 
 const AircraftManagement: React.FC = () => {
   const [aircrafts, setAircrafts] = useState<Aircraft[]>([]);
+  const [nextId, setNextId] = useState(1); // State để theo dõi id tiếp theo
   const [selectedAircraft, setSelectedAircraft] = useState<Aircraft | null>(
     null
   );
-  const [newAircraft, setNewAircraft] = useState<Aircraft>({
-    id: "",
+  const [newAircraft, setNewAircraft] = useState<Omit<Aircraft, "id">>({
     manufacturer: "",
     model: "",
     yearManufactured: new Date().getFullYear(),
-    registrationNumber: "",
     seatConfiguration: {
       economyClass: 0,
       businessClass: 0,
       firstClass: 0,
     },
-    status: "Active",
   });
 
   const handleInputChange = (
@@ -58,42 +54,36 @@ const AircraftManagement: React.FC = () => {
   };
 
   const addAircraft = () => {
-    const { id, manufacturer, model } = newAircraft;
+    const { manufacturer, model } = newAircraft;
     const { economyClass, businessClass, firstClass } =
       newAircraft.seatConfiguration;
 
     if (
-      id &&
       manufacturer &&
       model &&
       economyClass >= 0 &&
       businessClass >= 0 &&
       firstClass >= 0
     ) {
-      const isDuplicate = aircrafts.some((aircraft) => aircraft.id === id);
+      // Thêm id vào máy bay mới
+      const aircraftWithId = {
+        ...newAircraft,
+        id: nextId,
+      };
 
-      if (isDuplicate) {
-        alert(
-          "An aircraft with this ID already exists. Please choose a different ID."
-        );
-        return;
-      }
-
-      setAircrafts((prevState) => [...prevState, { ...newAircraft }]);
+      setAircrafts((prevState) => [...prevState, aircraftWithId]);
+      setNextId(nextId + 1); // Tăng id cho lần thêm tiếp theo
 
       // Reset form
       setNewAircraft({
-        id: "",
         manufacturer: "",
         model: "",
         yearManufactured: new Date().getFullYear(),
-        registrationNumber: "",
         seatConfiguration: {
           economyClass: 0,
           businessClass: 0,
           firstClass: 0,
         },
-        status: "Active",
       });
     } else {
       alert(
@@ -106,6 +96,7 @@ const AircraftManagement: React.FC = () => {
     setSelectedAircraft(aircraft);
   };
 
+  // Check model để remove
   const removeAircraft = (aircraft: Aircraft) => {
     setAircrafts((prevState) => prevState.filter((a) => a.id !== aircraft.id));
 
@@ -116,10 +107,6 @@ const AircraftManagement: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* <header className={styles.header}>
-        <h1>Aircraft Management System</h1>
-      </header> */}
-
       <main className={styles.main}>
         <section className={styles.inputSection}>
           <h2>Add New Aircraft</h2>
@@ -130,18 +117,6 @@ const AircraftManagement: React.FC = () => {
               addAircraft();
             }}
           >
-            <div className={styles.formGroup}>
-              <label htmlFor="id">Aircraft ID</label>
-              <input
-                id="id"
-                type="text"
-                name="id"
-                placeholder="Enter unique identifier"
-                value={newAircraft.id}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
             <div className={styles.formGroup}>
               <label htmlFor="manufacturer">Manufacturer</label>
               <input
@@ -181,18 +156,9 @@ const AircraftManagement: React.FC = () => {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="registrationNumber">Registration Number</label>
-              <input
-                id="registrationNumber"
-                type="text"
-                name="registrationNumber"
-                placeholder="Enter registration number"
-                value={newAircraft.registrationNumber}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Seat Configuration</label>
+              <label>
+                <h3>Seat Configuration:</h3>
+              </label>
               <div className={styles.seatInputs}>
                 <div className={styles.seatInputGroup}>
                   <label htmlFor="economyClass">Economy Class</label>
@@ -235,19 +201,6 @@ const AircraftManagement: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="status">Status</label>
-              <select
-                id="status"
-                name="status"
-                value={newAircraft.status}
-                onChange={handleInputChange}
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Maintenance">Maintenance</option>
-              </select>
-            </div>
             <button type="submit" className={styles.submitButton}>
               Add Aircraft
             </button>
@@ -267,11 +220,7 @@ const AircraftManagement: React.FC = () => {
                       {aircraft.manufacturer} {aircraft.model}
                     </h3>
                     <p>
-                      <strong>ID:</strong> {aircraft.id}
-                    </p>
-                    <p>
-                      <strong>Registration:</strong>{" "}
-                      {aircraft.registrationNumber || "N/A"}
+                      <strong>Year:</strong> {aircraft.yearManufactured}
                     </p>
                   </div>
                   <div className={styles.aircraftActions}>
@@ -311,22 +260,8 @@ const AircraftManagement: React.FC = () => {
             </div>
             <div className={styles.modalDetailsGrid}>
               <div className={styles.modalDetailItem}>
-                <strong>Aircraft ID:</strong>
-                <span>{selectedAircraft.id}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <strong>Registration Number:</strong>
-                <span>
-                  {selectedAircraft.registrationNumber || "Not Available"}
-                </span>
-              </div>
-              <div className={styles.modalDetailItem}>
                 <strong>Year Manufactured:</strong>
                 <span>{selectedAircraft.yearManufactured}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <strong>Status:</strong>
-                <span>{selectedAircraft.status}</span>
               </div>
             </div>
 

@@ -126,6 +126,11 @@
 
 .delayModal h2 {
   margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.delayModal p {
+  margin-bottom: 15px;
 }
 
 .delayModal label {
@@ -252,5 +257,51 @@
 
   .delayModal {
     width: 90%;
+  }
+}
+
+/* Thêm vào file CSS hiện có */
+
+.modalFormGroup {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.modalFormGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.delayReasonInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.delayReasonInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Cập nhật style cho nút Save khi disabled */
+.saveButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Responsive styles cho modal form */
+@media (max-width: 480px) {
+  .modalFormGroup {
+    margin-bottom: 12px;
+  }
+
+  .delayReasonInput {
+    min-height: 60px;
+    font-size: 14px;
   }
 }

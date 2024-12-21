@@ -23,7 +23,7 @@ const AdminLogin = () => {
 
       const response = await axios.post(
         `${backendUrl}/auth/admin/login`,
-        { email:username, password }, // Dữ liệu gửi đi
+        { email: username, password }, // Dữ liệu gửi đi
         {
           headers: {
             "Content-Type": "application/json",
