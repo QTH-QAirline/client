@@ -1,115 +1,62 @@
 {
   "flights": {
-    "upcoming": [
-      {
-        "id": "FL001",
-        "from": {
-          "city": "Hà Nội",
-          "airport": "Nội Bài International Airport",
-          "code": "HAN",
-          "terminal": "T2"
-        },
-        "to": {
-          "city": "Hồ Chí Minh",
-          "airport": "Tân Sơn Nhất International Airport",
-          "code": "SGN",
-          "terminal": "T1"
-        },
-        "departureDate": "2024-11-25",
-        "departureTime": "08:30",
-        "arrivalDate": "2024-11-25",
-        "arrivalTime": "10:40",
-        "flightNumber": "VN123",
-        "airline": "QAirline",
-        "aircraft": "Airbus A321",
-        "status": "On Time",
-        "price": 1200000,
-        "class": "Economy",
-        "bookingCode": "ABC123"
-      },
-      {
-        "id": "FL002",
-        "from": {
-          "city": "Đà Nẵng",
-          "airport": "Đà Nẵng International Airport",
-          "code": "DAD",
-          "terminal": "T1"
-        },
-        "to": {
-          "city": "Hà Nội",
-          "airport": "Nội Bài International Airport",
-          "code": "HAN",
-          "terminal": "T2"
-        },
-        "departureDate": "2024-12-01",
-        "departureTime": "15:45",
-        "arrivalDate": "2024-12-01",
-        "arrivalTime": "17:30",
-        "flightNumber": "VJ456",
-        "airline": "QAirline",
-        "aircraft": "Airbus A320",
-        "status": "On Time",
-        "price": 850000,
-        "class": "Economy",
-        "bookingCode": "XYZ789"
-      }
-    ],
-    "completed": [
-      {
-        "id": "FL003",
-        "from": {
-          "city": "Hồ Chí Minh",
-          "airport": "Tân Sơn Nhất International Airport",
-          "code": "SGN",
-          "terminal": "T1"
-        },
-        "to": {
-          "city": "Phú Quốc",
-          "airport": "Phú Quốc International Airport",
-          "code": "PQC",
-          "terminal": "T1"
-        },
-        "departureDate": "2024-11-10",
-        "departureTime": "09:15",
-        "arrivalDate": "2024-11-10",
-        "arrivalTime": "10:30",
-        "flightNumber": "BL789",
-        "airline": "QAirline",
-        "aircraft": "Airbus A320",
-        "status": "Completed",
-        "price": 750000,
-        "class": "Economy",
-        "bookingCode": "DEF456"
-      }
-    ],
-    "cancelled": [
-      {
-        "id": "FL004",
-        "from": {
-          "city": "Hà Nội",
-          "airport": "Nội Bài International Airport",
-          "code": "HAN",
-          "terminal": "T2"
-        },
-        "to": {
-          "city": "Nha Trang",
-          "airport": "Cam Ranh International Airport",
-          "code": "CXR",
-          "terminal": "T1"
-        },
-        "departureDate": "2024-11-15",
-        "departureTime": "13:20",
-        "arrivalDate": "2024-11-15",
-        "arrivalTime": "15:10",
-        "flightNumber": "VN567",
-        "airline": "QAirline",
-        "aircraft": "Airbus A321",
-        "status": "Cancelled",
-        "price": 1100000,
-        "class": "Economy",
-        "bookingCode": "GHI789",
-        "cancellationReason": "Adverse Weather Conditions"
-      }
-    ]
+      "upcoming": [
+          {
+              "id": "3",
+              "from": {
+                  "city": "Hà Nội",
+                  "airport": "Nội Bài International Airport",
+                  "code": "HAN",
+                  "terminal": "T1"
+              },
+              "to": {
+                  "city": "Hồ Chí Minh",
+                  "airport": "Tân Sơn Nhất International Airport",
+                  "code": "SGN",
+                  "terminal": "T2"
+              },
+              "departureDate": "2024-12-22",
+              "departureTime": "14:30",
+              "arrivalDate": "2024-12-22",
+              "arrivalTime": "17:45",
+              "flightNumber": "6",
+              "airline": "QAirline",
+              "aircraft": "747",
+              "status": "Scheduled",
+              "price": 350,
+              "class": "Business",
+              "bookingCode": "3",
+              "cancellationReason": ""
+          },
+          {
+              "id": "4",
+              "from": {
+                  "city": "Hà Nội",
+                  "airport": "Nội Bài International Airport",
+                  "code": "HAN",
+                  "terminal": "T1"
+              },
+              "to": {
+                  "city": "Hồ Chí Minh",
+                  "airport": "Tân Sơn Nhất International Airport",
+                  "code": "SGN",
+                  "terminal": "T2"
+              },
+              "departureDate": "2024-12-22",
+              "departureTime": "14:30",
+              "arrivalDate": "2024-12-22",
+              "arrivalTime": "17:45",
+              "flightNumber": "6",
+              "airline": "QAirline",
+              "aircraft": "747",
+              "status": "Scheduled",
+              "price": 350,
+              "class": "Business",
+              "bookingCode": "4",
+              "cancellationReason": ""
+          }
+      ],
+      "completed": [],
+      "cancelled": []
   }
 }

@@ -3,8 +3,10 @@ import { useState, useEffect, useContext } from "react";
 import styles from "./page.module.css";
 import { LanguageContext } from "../utils/LanguageContext";
 import { en, vi } from "../utils/locales";
+import axios from "axios";
 
 type FlightStatus = "upcoming" | "completed" | "cancelled";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface Airport {
   city: string;
@@ -84,8 +86,27 @@ export default function MyFlights() {
   useEffect(() => {
     const fetchFlights = async () => {
       try {
-        const response = await fetch("/data/myflights.json");
-        const data = await response.json();
+        const storedUserData = localStorage.getItem("user");
+        let userData;
+        // Kiểm tra xem dữ liệu có tồn tại hay không
+        if (storedUserData) {
+          // Chuyển đổi chuỗi JSON thành đối tượng
+          userData = JSON.parse(storedUserData);
+        } else {
+          console.log("Không có dữ liệu người dùng trong localStorage");
+        }
+        const response = await axios.get(
+          `${BACKEND_URL}/customers/tickets/${userData.customer_id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${userData.token}`, // Thay `token` bằng token thực tế của bạn
+            },
+          }
+        );
+        const data = response.data;
+        
+        console.log(data);
         setFlightData(data);
       } catch (error) {
         console.error("Error loading flight data:", error);
@@ -197,24 +218,26 @@ export default function MyFlights() {
         </div>
 
         <div className={styles.flightsContainer}>
-          {loading ? (
-            <div className={styles.loading}>{translations.loading}</div>
-          ) : flightData ? (
-            flightData.flights[activeTab].length > 0 ? (
-              <div className={styles.flightsList}>
-                {flightData.flights[activeTab].map((flight) =>
-                  renderFlightCard(flight)
-                )}
-              </div>
-            ) : (
-              <div className={styles.noFlights}>
-                {translations.noFlights.replace("{status}", activeTab)}
-              </div>
-            )
-          ) : (
-            <div className={styles.error}>{translations.error}</div>
-          )}
-        </div>
+  {loading ? (
+    <div className={styles.loading}>{translations.loading}</div>
+  ) : flightData?.flights?.[activeTab] ? (
+    // Kiểm tra flightData.flights[activeTab] tồn tại và có chuyến bay
+    <div className={styles.flightsList}>
+      {flightData.flights[activeTab].map((flight) =>
+        renderFlightCard(flight),
+      )}
+    </div>
+  ) : flightData ? (
+    // Nếu flightData có nhưng không có chuyến bay cho activeTab
+    <div className={styles.noFlights}>
+      {translations.noFlights.replace("{status}", activeTab)}
+    </div>
+  ) : (
+    // Nếu không có flightData
+    <div className={styles.error}>{translations.error}</div>
+  )}
+</div>
+
       </div>
     </div>
   );
