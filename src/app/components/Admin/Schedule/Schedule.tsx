@@ -1,6 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Schedule.module.css";
+import axios from "axios";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 
 interface Flight {
   id: string;
@@ -11,50 +14,41 @@ interface Flight {
   arrivalDate: string;
   departureTime: string;
   arrivalTime: string;
-  status: "onTime" | "delayed";
+  status: "Scheduled" | "Delayed";
   delayReason?: string; // Thêm trường lý do delay
   basePrice: number;
 }
 
 const Schedule: React.FC = () => {
-  const [flights, setFlights] = useState<Flight[]>([
-    {
-      id: "F001",
-      aircraft_id: "Boeing 737",
-      departureCity: "New York",
-      arrivalCity: "Los Angeles",
-      departureDate: "2024-06-15",
-      arrivalDate: "2024-06-15",
-      departureTime: "09:00",
-      arrivalTime: "12:00",
-      status: "onTime",
-      basePrice: 500,
-    },
-    {
-      id: "F002",
-      aircraft_id: "Airbus A320",
-      departureCity: "Chicago",
-      arrivalCity: "Miami",
-      departureDate: "2024-06-15",
-      arrivalDate: "2024-06-15",
-      departureTime: "14:30",
-      arrivalTime: "17:45",
-      status: "onTime",
-      basePrice: 500,
-    },
-    {
-      id: "F003",
-      aircraft_id: "Boeing 777",
-      departureCity: "San Francisco",
-      arrivalCity: "Seattle",
-      departureDate: "2024-06-15",
-      arrivalDate: "2024-06-15",
-      departureTime: "20:15",
-      arrivalTime: "22:30",
-      status: "onTime",
-      basePrice: 500,
-    },
-  ]);
+  const [flights, setFlights] = useState<Flight[]>([]);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        
+
+        if (!token) {
+          console.log("No token found in localStorage.");
+          return;
+        }
+        console.log(token);
+
+        const response = await axios.get(`${BACKEND_URL}/admin/flight`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        console.log(response.data);
+        setFlights(response.data);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   const [delayedFlight, setDelayedFlight] = useState<Flight | null>(null);
   // const [newDepartureTime, setNewDepartureTime] = useState("");
@@ -85,16 +79,41 @@ const Schedule: React.FC = () => {
     return departure < arrival;
   };
 
-  const handleDelayFlight = (flight: Flight) => {
+  const handleDelayFlight = async (flight: Flight) => {
     setDelayedFlight(flight);
     setDelayMinutes(0); // Reset số phút delay về 0
     setDelayReason(flight.delayReason || ""); // Reset lý do delay thành rỗng nếu chưa có
   };
 
-  const handleSaveDelay = () => {
+  const handleSaveDelay = async () => {
     if (!delayedFlight || !delayReason || delayMinutes <= 0) return;
 
     const newTimes = calculateNewTimes(delayedFlight, delayMinutes);
+
+    const token = localStorage.getItem("token");
+        
+
+    if (!token) {
+      console.log("No token found in localStorage.");
+      return;
+    }
+    console.log(token);
+    
+    await axios.put(
+      `${BACKEND_URL}/admin/flight`,
+      {
+        flight_id: Number(delayedFlight.id),
+         reason: delayedFlight.delayReason,
+        delay_date: `${newTimes.newDepartureDate}T${newTimes.newDepartureTime}:00`
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Đảm bảo sử dụng đúng dấu backtick
+        },
+      }
+    );
+    console.log(delayedFlight.id);
 
     setFlights(
       flights.map((f) =>
@@ -105,7 +124,7 @@ const Schedule: React.FC = () => {
               departureTime: newTimes.newDepartureTime,
               arrivalDate: newTimes.newArrivalDate,
               arrivalTime: newTimes.newArrivalTime,
-              status: "delayed",
+              status: "Delayed",
               delayReason: delayReason,
             }
           : f
@@ -117,7 +136,7 @@ const Schedule: React.FC = () => {
     setDelayReason("");
   };
 
-  const handleAddFlight = () => {
+  const handleAddFlight = async () => {
     if (
       !validateDates(
         newFlight.departureDate!,
@@ -139,9 +158,79 @@ const Schedule: React.FC = () => {
       arrivalDate: newFlight.arrivalDate!,
       departureTime: newFlight.departureTime!,
       arrivalTime: newFlight.arrivalTime!,
-      status: "onTime",
+      status: "Scheduled",
       basePrice: newFlight.basePrice!,
     };
+    const token = localStorage.getItem("token");
+    
+
+    if (!token) {
+      console.log("No token found in localStorage.");
+      return;
+    }
+    console.log(token);
+
+    const departure = await axios.get(`${BACKEND_URL}/admin/change/${newFlightData.departureCity}`, 
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Đảm bảo sử dụng đúng dấu backtick
+      },
+    }
+    );
+    const departureData = departure.data;
+    const arrival = await axios.get(`${BACKEND_URL}/admin/change/${newFlightData.arrivalCity}`, 
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Đảm bảo sử dụng đúng dấu backtick
+      },
+    }
+    );
+    const arrivalData = arrival.data;
+
+    
+    const response = await axios.post(
+      `${BACKEND_URL}/admin/flight`,
+      {
+        aircraft_id: Number(newFlightData.aircraft_id),
+        departure_airport: departureData.airport_id,
+        arrival_airport: arrivalData.airport_id,
+        departure_time: new Date(
+          `${newFlightData.departureDate}T${newFlightData.departureTime}:00`
+        ),
+        arrival_time: new Date(
+          `${newFlightData.arrivalDate}T${newFlightData.arrivalTime}:00`
+        ),
+        base_price: newFlightData.basePrice,
+        created_at: new Date(),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Đảm bảo sử dụng đúng dấu backtick
+        },
+      }
+    );
+    console.log("respond: ")
+    console.log(response.data);
+    console.log(newFlightData.id);
+    newFlightData.id = response.data;
+    newFlightData.departureCity = departureData.location;
+    newFlightData.arrivalCity = arrivalData.location;
+    
+    const object = {
+      aircraft_id: newFlightData.aircraft_id,
+        departure_airport: newFlightData.departureCity,
+        arrival_airport: newFlightData.arrivalCity,
+        departure_time: new Date(`${newFlightData.departureDate}T${newFlightData.departureTime}:00`),
+        arrival_time: new Date(`${newFlightData.arrivalDate}T${newFlightData.arrivalTime}:00`),
+        base_price: newFlightData.basePrice,
+        created_at: new Date(),
+    }
+    console.log({
+        object
+    });
     setFlights([...flights, newFlightData]);
     setNewFlight({
       aircraft_id: "",
@@ -200,7 +289,9 @@ const Schedule: React.FC = () => {
   };
 
   const handleDeleteFlight = (id: string) => {
+    const flight = flights.find((f) => f.id === id);
     setFlights(flights.filter((f) => f.id !== id));
+
   };
 
   return (
@@ -341,7 +432,7 @@ const Schedule: React.FC = () => {
               <td>
                 <span
                   className={`${styles.statusBadge} ${
-                    flight.status === "onTime"
+                    flight.status === "Scheduled"
                       ? styles.statusOnTime
                       : styles.statusDelayed
                   }`}

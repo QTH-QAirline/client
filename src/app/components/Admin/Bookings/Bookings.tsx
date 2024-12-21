@@ -1,6 +1,8 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import styles from "./Bookings.module.css";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 import {
   LineChart,
   Line,
@@ -11,6 +13,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import axios from "axios";
 
 // Booking data interface
 interface Booking {
@@ -20,41 +23,41 @@ interface Booking {
   departureCity: string;
   arrivalCity: string;
   bookingDate: string;
-  status: "confirmed" | "pending" | "cancelled";
-  ticketClass: "economy" | "business" | "first";
+  status: "Confirmed" | "Pending" | "Cancelled";
+  ticketClass: "Economy" | "Business" | "First";
   totalPrice: number;
 }
 
 // Sales data for chart
 const salesData = {
   week: [
-    { date: "Mon", economy: 50, business: 20, first: 5 },
-    { date: "Tue", economy: 55, business: 25, first: 7 },
-    { date: "Wed", economy: 60, business: 30, first: 8 },
-    { date: "Thu", economy: 58, business: 22, first: 6 },
-    { date: "Fri", economy: 65, business: 35, first: 10 },
-    { date: "Sat", economy: 70, business: 40, first: 12 },
-    { date: "Sun", economy: 75, business: 45, first: 15 },
+    { date: "Mon", Economy: 50, Business: 20, First: 5 },
+    { date: "Tue", Economy: 55, Business: 25, First: 7 },
+    { date: "Wed", Economy: 60, Business: 30, First: 8 },
+    { date: "Thu", Economy: 58, Business: 22, First: 6 },
+    { date: "Fri", Economy: 65, Business: 35, First: 10 },
+    { date: "Sat", Economy: 70, Business: 40, First: 12 },
+    { date: "Sun", Economy: 75, Business: 45, First: 15 },
   ],
   month: [
-    { date: "Week 1", economy: 250, business: 100, first: 30 },
-    { date: "Week 2", economy: 280, business: 120, first: 35 },
-    { date: "Week 3", economy: 300, business: 140, first: 40 },
-    { date: "Week 4", economy: 320, business: 160, first: 45 },
+    { date: "Week 1", Economy: 250, Business: 100, First: 30 },
+    { date: "Week 2", Economy: 280, Business: 120, First: 35 },
+    { date: "Week 3", Economy: 300, Business: 140, First: 40 },
+    { date: "Week 4", Economy: 320, Business: 160, First: 45 },
   ],
   year: [
-    { date: "Jan", economy: 1200, business: 500, first: 150 },
-    { date: "Feb", economy: 1300, business: 550, first: 170 },
-    { date: "Mar", economy: 1400, business: 600, first: 190 },
-    { date: "Apr", economy: 1500, business: 650, first: 210 },
-    { date: "May", economy: 1600, business: 700, first: 230 },
-    { date: "Jun", economy: 1700, business: 750, first: 250 },
-    { date: "Jul", economy: 1800, business: 800, first: 270 },
-    { date: "Aug", economy: 1900, business: 850, first: 290 },
-    { date: "Sep", economy: 2000, business: 900, first: 310 },
-    { date: "Oct", economy: 2100, business: 950, first: 330 },
-    { date: "Nov", economy: 2200, business: 1000, first: 350 },
-    { date: "Dec", economy: 2300, business: 1050, first: 370 },
+    { date: "Jan", Economy: 1200, Business: 500, First: 150 },
+    { date: "Feb", Economy: 1300, Business: 550, First: 170 },
+    { date: "Mar", Economy: 1400, Business: 600, First: 190 },
+    { date: "Apr", Economy: 1500, Business: 650, First: 210 },
+    { date: "May", Economy: 1600, Business: 700, First: 230 },
+    { date: "Jun", Economy: 1700, Business: 750, First: 250 },
+    { date: "Jul", Economy: 1800, Business: 800, First: 270 },
+    { date: "Aug", Economy: 1900, Business: 850, First: 290 },
+    { date: "Sep", Economy: 2000, Business: 900, First: 310 },
+    { date: "Oct", Economy: 2100, Business: 950, First: 330 },
+    { date: "Nov", Economy: 2200, Business: 1000, First: 350 },
+    { date: "Dec", Economy: 2300, Business: 1050, First: 370 },
   ],
 };
 
@@ -67,8 +70,8 @@ const initialBookings: Booking[] = [
     departureCity: "New York",
     arrivalCity: "Los Angeles",
     bookingDate: "2024-06-15",
-    status: "confirmed",
-    ticketClass: "economy",
+    status: "Confirmed",
+    ticketClass: "Economy",
     totalPrice: 350,
   },
   {
@@ -78,8 +81,8 @@ const initialBookings: Booking[] = [
     departureCity: "Chicago",
     arrivalCity: "Miami",
     bookingDate: "2024-06-20",
-    status: "pending",
-    ticketClass: "business",
+    status: "Pending",
+    ticketClass: "Business",
     totalPrice: 750,
   },
   {
@@ -89,14 +92,14 @@ const initialBookings: Booking[] = [
     departureCity: "San Francisco",
     arrivalCity: "Seattle",
     bookingDate: "2024-06-18",
-    status: "confirmed",
-    ticketClass: "first",
+    status: "Confirmed",
+    ticketClass: "First",
     totalPrice: 1200,
   },
 ];
 
 const BookingManagement: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<{
     status?: Booking["status"];
     ticketClass?: Booking["ticketClass"];
@@ -105,6 +108,35 @@ const BookingManagement: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<"week" | "month" | "year">(
     "week"
   );
+
+  // Fetch bookings on component mount
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        
+
+        if (!token) {
+          console.log("No token found in localStorage.");
+          return;
+        }
+        console.log(token);
+
+        const response = await axios.get(`${BACKEND_URL}/admin/booking`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        console.log(response.data);
+        setBookings(response.data);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   // Memoized filtering logic
   const filteredBookings = useMemo(() => {
@@ -131,11 +163,11 @@ const BookingManagement: React.FC = () => {
   // Status color mapping
   const getStatusColor = (status: Booking["status"]) => {
     switch (status) {
-      case "confirmed":
+      case "Confirmed":
         return styles.statusConfirmed;
-      case "pending":
+      case "Pending":
         return styles.statusPending;
-      case "cancelled":
+      case "Cancelled":
         return styles.statusCancelled;
       default:
         return "";
@@ -181,9 +213,9 @@ const BookingManagement: React.FC = () => {
             }
           >
             <option value="">All Statuses</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="pending">Pending</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
 
           <select
@@ -197,9 +229,9 @@ const BookingManagement: React.FC = () => {
             }
           >
             <option value="">All Classes</option>
-            <option value="economy">Economy</option>
-            <option value="business">Business</option>
-            <option value="first">First</option>
+            <option value="Economy">Economy</option>
+            <option value="Business">Business</option>
+            <option value="First">First</option>
           </select>
 
           {(filter.status || filter.ticketClass || searchTerm) && (
@@ -265,21 +297,21 @@ const BookingManagement: React.FC = () => {
             <Legend verticalAlign="top" height={36} iconType="circle" />
             <Line
               type="monotone"
-              dataKey="economy"
+              dataKey="Economy"
               stroke="#8884d8"
               name="Economy"
               strokeWidth={3}
             />
             <Line
               type="monotone"
-              dataKey="business"
+              dataKey="Business"
               stroke="#82ca9d"
               name="Business"
               strokeWidth={3}
             />
             <Line
               type="monotone"
-              dataKey="first"
+              dataKey="First"
               stroke="#ffc658"
               name="First"
               strokeWidth={3}
@@ -312,9 +344,9 @@ const BookingManagement: React.FC = () => {
                 </td>
                 <td>{booking.bookingDate}</td>
                 <td>
-                  {booking.ticketClass === "economy"
+                  {booking.ticketClass === "Economy"
                     ? "Economy"
-                    : booking.ticketClass === "business"
+                    : booking.ticketClass === "Business"
                     ? "Business"
                     : "First"}
                 </td>
@@ -325,9 +357,9 @@ const BookingManagement: React.FC = () => {
                       booking.status
                     )}`}
                   >
-                    {booking.status === "confirmed"
+                    {booking.status === "Confirmed"
                       ? "Confirmed"
-                      : booking.status === "pending"
+                      : booking.status === "Pending"
                       ? "Pending"
                       : "Cancelled"}
                   </span>
