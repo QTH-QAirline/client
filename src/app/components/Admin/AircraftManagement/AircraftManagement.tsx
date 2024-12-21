@@ -14,6 +14,9 @@ interface Aircraft {
   };
 }
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+
 const AircraftManagement: React.FC = () => {
   const [aircrafts, setAircrafts] = useState<Aircraft[]>([]);
   const [nextId, setNextId] = useState(1); // State để theo dõi id tiếp theo
@@ -30,6 +33,50 @@ const AircraftManagement: React.FC = () => {
       firstClass: 0,
     },
   });
+  const [error, setError] = useState<string>("");
+
+  // Cập nhật hàm gọi API để phù hợp với Hono backend
+  const addAircraftToServer = async (aircraftData: typeof newAircraft) => {
+    try {
+      // Lấy token từ localStorage (giả sử đã được lưu sau khi đăng nhập)
+      const adminToken = localStorage.getItem("token");
+
+      if (!adminToken) {
+        throw new Error("Bạn cần đăng nhập với quyền admin");
+      }
+
+      const response = await fetch(`${BACKEND_URL}/admin/aircraft`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify({
+          manufacturer: aircraftData.manufacturer,
+          model: aircraftData.model,
+          // Tính tổng số ghế cho capacity
+          capacity:
+            aircraftData.seatConfiguration.economyClass +
+            aircraftData.seatConfiguration.businessClass +
+            aircraftData.seatConfiguration.firstClass,
+          economy_seats: aircraftData.seatConfiguration.economyClass,
+          business_seats: aircraftData.seatConfiguration.businessClass,
+          first_seats: aircraftData.seatConfiguration.firstClass,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Lỗi khi thêm máy bay");
+      }
+      const result = await response.text();
+      return result;
+    } catch (err) {
+      throw new Error(
+        err instanceof Error ? err.message : "Có lỗi xảy ra khi thêm máy bay"
+      );
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -53,26 +100,39 @@ const AircraftManagement: React.FC = () => {
     }
   };
 
-  const addAircraft = () => {
-    const { manufacturer, model } = newAircraft;
-    const { economyClass, businessClass, firstClass } =
-      newAircraft.seatConfiguration;
+  const addAircraft = async () => {
+    try {
+      setError("");
+      const { manufacturer, model } = newAircraft;
+      const { economyClass, businessClass, firstClass } =
+        newAircraft.seatConfiguration;
 
-    if (
-      manufacturer &&
-      model &&
-      economyClass >= 0 &&
-      businessClass >= 0 &&
-      firstClass >= 0
-    ) {
-      // Thêm id vào máy bay mới
+      if (!manufacturer || !model) {
+        setError("Vui lòng điền đầy đủ thông tin máy bay");
+        return;
+      }
+
+      if (economyClass < 0 || businessClass < 0 || firstClass < 0) {
+        setError("Số ghế không được âm");
+        return;
+      }
+
+      if (economyClass + businessClass + firstClass === 0) {
+        setError("Tổng số ghế phải lớn hơn 0");
+        return;
+      } // Gọi API để thêm máy bay
+      const result = await addAircraftToServer(newAircraft);
+
+      // Thêm vào state local với ID từ response
+      // Giả sử response trả về dạng "...aircraft_id là X"
+      const aircraftId = parseInt(result.split("là ").pop() || "0");
+
       const aircraftWithId = {
         ...newAircraft,
-        id: nextId,
+        id: aircraftId,
       };
 
       setAircrafts((prevState) => [...prevState, aircraftWithId]);
-      setNextId(nextId + 1); // Tăng id cho lần thêm tiếp theo
 
       // Reset form
       setNewAircraft({
@@ -85,10 +145,10 @@ const AircraftManagement: React.FC = () => {
           firstClass: 0,
         },
       });
-    } else {
-      alert(
-        "Please fill in all required fields and ensure seat numbers are non-negative."
-      );
+
+      alert(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
     }
   };
 
@@ -108,6 +168,7 @@ const AircraftManagement: React.FC = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
+        {error && <div className={styles.error}>{error}</div>}
         <section className={styles.inputSection}>
           <h2>Add New Aircraft</h2>
           <form
