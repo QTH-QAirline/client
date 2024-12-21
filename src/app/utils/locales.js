@@ -17,6 +17,7 @@ export const en = {
     dateInput: "Select dates",
     travelerLabel: "Traveler",
     searchButton: "Search",
+    addFlight: "Add a flight",
     travelerLabels: {
       onePerson: "1 Person",
       twoPersons: "2 Persons",
@@ -230,6 +231,7 @@ export const vi = {
     dateInput: "Thời gian",
     travelerLabel: "Số người",
     searchButton: "Tìm kiếm",
+    addFlight: "Thêm chuyến bay",
     travelerLabels: {
       onePerson: "1 Người",
       twoPersons: "2 Người",

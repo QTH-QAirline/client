@@ -21,6 +21,27 @@ interface Airport {
   city: string;
 }
 
+// Thêm interface mới để quản lý chuyến bay đa điểm
+interface FlightRoute {
+  id: string;
+  fromLocation: string;
+  toLocation: string;
+  dateRange: {
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+  };
+}
+
+// Thêm interface mới cho dropdown states
+interface MultiCityDropdownState {
+  [key: string]: {
+    showFrom: boolean;
+    showTo: boolean;
+    filteredFrom: Airport[];
+    filteredTo: Airport[];
+  };
+}
+
 // Danh sách sân bay
 const airports: Airport[] = [
   // Việt Nam
@@ -167,6 +188,35 @@ const Header = () => {
   );
   const [filteredToAirports, setFilteredToAirports] = useState<Airport[]>([]);
 
+  // Thêm state mới cho multi-city
+  const [multiCityRoutes, setMultiCityRoutes] = useState<FlightRoute[]>([
+    {
+      id: "2",
+      fromLocation: "",
+      toLocation: "",
+      dateRange: {
+        startDate: undefined,
+        endDate: undefined,
+      },
+    },
+  ]);
+
+  // Trong component Header, thêm state mới
+  const [multiCityDropdowns, setMultiCityDropdowns] =
+    useState<MultiCityDropdownState>({
+      "2": {
+        showFrom: false,
+        showTo: false,
+        filteredFrom: [],
+        filteredTo: [],
+      },
+    });
+
+  // Thêm refs cho từng route
+  const multiCityRefs = useRef<{ [key: string]: { fromRef: any; toRef: any } }>(
+    {}
+  );
+
   const fromRef = useRef<HTMLDivElement>(null);
   const toRef = useRef<HTMLDivElement>(null);
 
@@ -184,17 +234,48 @@ const Header = () => {
   const [ticketClass, setTicketClass] = useState("business");
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      // Xử lý cho dropdown chính
       if (fromRef.current && !fromRef.current.contains(event.target as Node)) {
         setShowFromDropdown(false);
       }
       if (toRef.current && !toRef.current.contains(event.target as Node)) {
         setShowToDropdown(false);
       }
+
+      // Xử lý cho multi-city dropdowns
+      Object.keys(multiCityRefs.current).forEach((routeId) => {
+        const refs = multiCityRefs.current[routeId];
+        if (
+          refs.fromRef?.current &&
+          !refs.fromRef.current.contains(event.target as Node)
+        ) {
+          setMultiCityDropdowns((prev) => ({
+            ...prev,
+            [routeId]: { ...prev[routeId], showFrom: false },
+          }));
+        }
+        if (
+          refs.toRef?.current &&
+          !refs.toRef.current.contains(event.target as Node)
+        ) {
+          setMultiCityDropdowns((prev) => ({
+            ...prev,
+            [routeId]: { ...prev[routeId], showTo: false },
+          }));
+        }
+      });
     };
 
+    // Thêm event listeners
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -211,6 +292,107 @@ const Header = () => {
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, []);
+
+  // Hàm thêm route mới
+  const addNewRoute = () => {
+    const newRouteId = (
+      Math.max(...multiCityRoutes.map((route) => parseInt(route.id))) + 1
+    ).toString();
+    setMultiCityRoutes([
+      ...multiCityRoutes,
+      {
+        id: newRouteId,
+        fromLocation: "",
+        toLocation: "",
+        dateRange: {
+          startDate: undefined,
+          endDate: undefined,
+        },
+      },
+    ]);
+    setMultiCityDropdowns((prev) => ({
+      ...prev,
+      [newRouteId]: {
+        showFrom: false,
+        showTo: false,
+        filteredFrom: [],
+        filteredTo: [],
+      },
+    }));
+  };
+
+  // Hàm xóa route
+  const removeRoute = (id: string) => {
+    if (multiCityRoutes.length > 1) {
+      setMultiCityRoutes(multiCityRoutes.filter((route) => route.id !== id));
+      // Xóa state dropdown tương ứng
+      setMultiCityDropdowns((prev) => {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      });
+    }
+  };
+
+  // Thêm các hàm xử lý cho multi-city dropdowns
+  const handleMultiCityInputFocus = (routeId: string, isFrom: boolean) => {
+    setMultiCityDropdowns((prev) => ({
+      ...prev,
+      [routeId]: {
+        ...prev[routeId],
+        [isFrom ? "showFrom" : "showTo"]: true,
+        [isFrom ? "filteredFrom" : "filteredTo"]: airports,
+      },
+    }));
+  };
+
+  const handleMultiCityLocationChange = (
+    routeId: string,
+    value: string,
+    isFrom: boolean
+  ) => {
+    // Cập nhật giá trị location
+    updateRoute(routeId, isFrom ? "fromLocation" : "toLocation", value);
+
+    // Cập nhật filtered airports
+    const filtered = filterAirports(value);
+    setMultiCityDropdowns((prev) => ({
+      ...prev,
+      [routeId]: {
+        ...prev[routeId],
+        [isFrom ? "filteredFrom" : "filteredTo"]: filtered,
+        [isFrom ? "showFrom" : "showTo"]: true,
+      },
+    }));
+  };
+
+  const handleMultiCityAirportSelect = (
+    routeId: string,
+    airport: Airport,
+    isFrom: boolean
+  ) => {
+    const value = `${airport.code} - ${airport.city}`;
+    updateRoute(routeId, isFrom ? "fromLocation" : "toLocation", value);
+    setMultiCityDropdowns((prev) => ({
+      ...prev,
+      [routeId]: {
+        ...prev[routeId],
+        [isFrom ? "showFrom" : "showTo"]: false,
+      },
+    }));
+  };
+
+  // Hàm cập nhật thông tin route
+  const updateRoute = (id: string, field: keyof FlightRoute, value: any) => {
+    setMultiCityRoutes(
+      multiCityRoutes.map((route) => {
+        if (route.id === id) {
+          return { ...route, [field]: value };
+        }
+        return route;
+      })
+    );
+  };
 
   // Xử lý click vào input để hiển thị toàn bộ danh sách
   const handleInputFocus = (isFrom: boolean) => {
@@ -278,39 +460,69 @@ const Header = () => {
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
 
-    const formattedFromLocation = formatLocation(fromLocation);
-    const formattedToLocation = formatLocation(toLocation);
-
-    if (!formattedFromLocation || !formattedToLocation) {
-      alert(
-        locale === "en"
-          ? "Please enter both departure and arrival locations"
-          : "Vui lòng nhập điểm đi và điểm đến"
+    if (tripType === "multiCity") {
+      // Kiểm tra điều kiện cho multi-city
+      const isValid = multiCityRoutes.every(
+        (route) =>
+          route.fromLocation &&
+          route.toLocation &&
+          route.dateRange.startDate &&
+          route.dateRange.endDate
       );
-      return;
+      if (!isValid) {
+        alert("Vui lòng điền đầy đủ thông tin cho tất cả các chuyến bay");
+        return;
+      }
+      // Tạo object chứa tất cả thông tin
+      const searchData = {
+        tripType,
+        routes: multiCityRoutes,
+        travelers,
+        ticketClass,
+      };
+
+      // Chuyển đổi thành query string
+      const queryParams = new URLSearchParams({
+        ...searchData,
+        routes: JSON.stringify(multiCityRoutes), // Chuyển mảng routes thành chuỗi JSON
+      }).toString();
+
+      router.push(`/search-flights/search?${queryParams}`);
+    } else {
+      const formattedFromLocation = formatLocation(fromLocation);
+      const formattedToLocation = formatLocation(toLocation);
+
+      if (!formattedFromLocation || !formattedToLocation) {
+        alert(
+          locale === "en"
+            ? "Please enter both departure and arrival locations"
+            : "Vui lòng nhập điểm đi và điểm đến"
+        );
+        return;
+      }
+
+      if (formattedFromLocation === formattedToLocation) {
+        alert(
+          locale === "en"
+            ? "Departure and arrival locations cannot be the same"
+            : "Điểm đi và điểm đến không được trùng nhau"
+        );
+        return;
+      }
+
+      // Chuẩn bị thông tin chi tiết để gửi đi
+      const queryParams = new URLSearchParams({
+        fromLocation: formattedFromLocation,
+        toLocation: formattedToLocation,
+        startDate: dateRange.startDate?.toISOString() || "",
+        endDate: dateRange.endDate?.toISOString() || "",
+        travelers,
+        tripType,
+        ticketClass,
+      }).toString();
+
+      router.push(`/search-flights/search?${queryParams}`);
     }
-
-    if (formattedFromLocation === formattedToLocation) {
-      alert(
-        locale === "en"
-          ? "Departure and arrival locations cannot be the same"
-          : "Điểm đi và điểm đến không được trùng nhau"
-      );
-      return;
-    }
-
-    // Chuẩn bị thông tin chi tiết để gửi đi
-    const queryParams = new URLSearchParams({
-      fromLocation: formattedFromLocation,
-      toLocation: formattedToLocation,
-      startDate: dateRange.startDate?.toISOString() || "",
-      endDate: dateRange.endDate?.toISOString() || "",
-      travelers,
-      tripType,
-      ticketClass,
-    }).toString();
-
-    router.push(`/search-flights/search?${queryParams}`);
   };
 
   return (
@@ -318,127 +530,7 @@ const Header = () => {
       <div className={styles.wrapper}>
         <div className={styles.searchContainer}>
           <form onSubmit={handleSearch} className={styles.searchForm}>
-            <div className={styles.mainInputs}>
-              <div className={styles.inputGroup} ref={fromRef}>
-                <label className={styles.label}>{translations.fromLabel}</label>
-                <input
-                  type="text"
-                  value={fromLocation}
-                  onChange={handleFromLocationChange}
-                  onFocus={() => handleInputFocus(true)}
-                  className={styles.input}
-                  placeholder={translations.fromInput}
-                  required
-                />
-                {showFromDropdown && filteredFromAirports.length > 0 && (
-                  <div className={styles.dropdown}>
-                    {filteredFromAirports.map((airport) => (
-                      <div
-                        key={airport.code}
-                        className={styles.dropdownItem}
-                        onClick={() => handleAirportSelect(airport, true)}
-                      >
-                        <div className={styles.airportCode}>
-                          {airport.code} - {airport.city}
-                        </div>
-                        <div className={styles.airportName}>{airport.name}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={swapLocations}
-                className={styles.swapButton}
-              >
-                <ArrowLeftRight className={styles.swapIcon} />
-              </button>
-
-              <div className={styles.inputGroup} ref={toRef}>
-                <label className={styles.label}>{translations.toLabel}</label>
-                <input
-                  type="text"
-                  value={toLocation}
-                  onChange={handleToLocationChange}
-                  onFocus={() => handleInputFocus(false)}
-                  className={styles.input}
-                  placeholder={translations.toInput}
-                  required
-                />
-                {showToDropdown && filteredToAirports.length > 0 && (
-                  <div className={styles.dropdown}>
-                    {filteredToAirports.map((airport) => (
-                      <div
-                        key={airport.code}
-                        className={styles.dropdownItem}
-                        onClick={() => handleAirportSelect(airport, false)}
-                      >
-                        <div className={styles.airportCode}>
-                          {airport.code} - {airport.city}
-                        </div>
-                        <div className={styles.airportName}>{airport.name}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>{translations.dateLabel}</label>
-                <div className={styles.iconInput}>
-                  <Calendar className={styles.inputIcon} />
-                  <DatePicker
-                    selectsRange={true}
-                    startDate={dateRange.startDate}
-                    endDate={dateRange.endDate}
-                    onChange={handleDateChange}
-                    placeholderText={translations.dateInput}
-                    dateFormat="dd/MM/yyyy"
-                    className={`${styles.input} ${styles.datepickerInput}`}
-                    isClearable={false}
-                    minDate={new Date()}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>
-                  {translations.travelerLabel}
-                </label>
-                <div className={styles.iconInput}>
-                  <User className={styles.inputIcon} />
-                  <select
-                    value={travelers}
-                    onChange={(e) => setTravelers(e.target.value)}
-                    className={styles.select}
-                  >
-                    <option value={translations.travelerLabels.onePerson}>
-                      {translations.travelerLabels.onePerson}
-                    </option>
-                    <option value={translations.travelerLabels.twoPersons}>
-                      {translations.travelerLabels.twoPersons}
-                    </option>
-                    <option value={translations.travelerLabels.threePersons}>
-                      {translations.travelerLabels.threePersons}
-                    </option>
-                    <option value={translations.travelerLabels.multiPerson}>
-                      {translations.travelerLabels.multiPerson}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className={styles.searchButton}
-                onClick={handleSearch}
-              >
-                <b>{translations.searchButton}</b>
-              </button>
-            </div>
-
+            {/* Phần Options */}
             <div className={styles.optionsRow}>
               <div className={styles.tripTypeSelector}>
                 {Object.entries(translations.tripTypeLabels).map(
@@ -473,6 +565,332 @@ const Header = () => {
                     </button>
                   )
                 )}
+              </div>
+            </div>
+
+            {/* Phần Main Search */}
+            <div className={styles.mainSearchSection}>
+              {/* First Flight Route - Luôn hiển thị */}
+              <div className={styles.flightRouteContainer}>
+                <div className={styles.inputGroup} ref={fromRef}>
+                  <label className={styles.label}>
+                    {translations.fromLabel}
+                  </label>
+                  <input
+                    type="text"
+                    value={fromLocation}
+                    onChange={handleFromLocationChange}
+                    onFocus={() => handleInputFocus(true)}
+                    className={styles.input}
+                    placeholder={translations.fromInput}
+                    required
+                  />
+                  {showFromDropdown && filteredFromAirports.length > 0 && (
+                    <div className={styles.dropdown}>
+                      {filteredFromAirports.map((airport) => (
+                        <div
+                          key={airport.code}
+                          className={styles.dropdownItem}
+                          onClick={() => handleAirportSelect(airport, true)}
+                        >
+                          <div className={styles.airportCode}>
+                            {airport.code} - {airport.city}
+                          </div>
+                          <div className={styles.airportName}>
+                            {airport.name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={swapLocations}
+                  className={styles.swapButton}
+                >
+                  <ArrowLeftRight className={styles.swapIcon} />
+                </button>
+
+                <div className={styles.inputGroup} ref={toRef}>
+                  <label className={styles.label}>{translations.toLabel}</label>
+                  <input
+                    type="text"
+                    value={toLocation}
+                    onChange={handleToLocationChange}
+                    onFocus={() => handleInputFocus(false)}
+                    className={styles.input}
+                    placeholder={translations.toInput}
+                    required
+                  />
+                  {showToDropdown && filteredToAirports.length > 0 && (
+                    <div className={styles.dropdown}>
+                      {filteredToAirports.map((airport) => (
+                        <div
+                          key={airport.code}
+                          className={styles.dropdownItem}
+                          onClick={() => handleAirportSelect(airport, false)}
+                        >
+                          <div className={styles.airportCode}>
+                            {airport.code} - {airport.city}
+                          </div>
+                          <div className={styles.airportName}>
+                            {airport.name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
+                    {translations.dateLabel}
+                  </label>
+                  <div className={styles.iconInput}>
+                    <Calendar className={styles.inputIcon} />
+                    <DatePicker
+                      selectsRange={true}
+                      startDate={dateRange.startDate}
+                      endDate={dateRange.endDate}
+                      onChange={handleDateChange}
+                      placeholderText={translations.dateInput}
+                      dateFormat="dd/MM/yyyy"
+                      className={`${styles.input} ${styles.datepickerInput}`}
+                      isClearable={false}
+                      minDate={new Date()}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Flight Routes for Multi-city */}
+              {tripType === "multiCity" && (
+                <div className={styles.additionalRoutes}>
+                  {multiCityRoutes.map((route) => (
+                    <div
+                      key={route.id}
+                      className={styles.additionalRouteContainer}
+                    >
+                      <div className={styles.routeHeader}>
+                        <span className={styles.routeNumber}>
+                          Flight {route.id}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeRoute(route.id)}
+                          className={styles.removeRouteBtn}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className={styles.routeInputs}>
+                        {/* From Location Input */}
+                        <div
+                          className={styles.inputGroup}
+                          ref={(el) => {
+                            if (!multiCityRefs.current[route.id]) {
+                              multiCityRefs.current[route.id] = {
+                                fromRef: { current: null },
+                                toRef: { current: null },
+                              };
+                            }
+                            multiCityRefs.current[route.id].fromRef.current =
+                              el;
+                          }}
+                        >
+                          <label className={styles.label}>
+                            {translations.fromLabel}
+                          </label>
+                          <input
+                            type="text"
+                            value={route.fromLocation}
+                            onChange={(e) =>
+                              updateRoute(
+                                route.id,
+                                "fromLocation",
+                                e.target.value
+                              )
+                            }
+                            onFocus={() =>
+                              handleMultiCityInputFocus(route.id, true)
+                            }
+                            className={styles.input}
+                            placeholder={translations.fromInput}
+                            required
+                          />
+                          {multiCityDropdowns[route.id]?.showFrom &&
+                            multiCityDropdowns[route.id]?.filteredFrom.length >
+                              0 && (
+                              <div className={styles.dropdown}>
+                                {multiCityDropdowns[route.id].filteredFrom.map(
+                                  (airport) => (
+                                    <div
+                                      key={airport.code}
+                                      className={styles.dropdownItem}
+                                      onClick={() =>
+                                        handleMultiCityAirportSelect(
+                                          route.id,
+                                          airport,
+                                          true
+                                        )
+                                      }
+                                    >
+                                      <div className={styles.airportCode}>
+                                        {airport.code} - {airport.city}
+                                      </div>
+                                      <div className={styles.airportName}>
+                                        {airport.name}
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            )}
+                        </div>
+
+                        {/* Swap Button */}
+                        <button type="button" className={styles.swapButton}>
+                          <ArrowLeftRight className={styles.swapIcon} />
+                        </button>
+
+                        {/* To Location Input */}
+                        <div
+                          className={styles.inputGroup}
+                          ref={(el) => {
+                            if (!multiCityRefs.current[route.id]) {
+                              multiCityRefs.current[route.id] = {
+                                fromRef: { current: null },
+                                toRef: { current: null },
+                              };
+                            }
+                            multiCityRefs.current[route.id].toRef.current = el;
+                          }}
+                        >
+                          <label className={styles.label}>
+                            {translations.toLabel}
+                          </label>
+                          <input
+                            type="text"
+                            value={route.toLocation}
+                            onChange={(e) =>
+                              updateRoute(
+                                route.id,
+                                "toLocation",
+                                e.target.value
+                              )
+                            }
+                            onFocus={() =>
+                              handleMultiCityInputFocus(route.id, false)
+                            }
+                            className={styles.input}
+                            placeholder={translations.toInput}
+                            required
+                          />
+                          {multiCityDropdowns[route.id]?.showTo &&
+                            multiCityDropdowns[route.id]?.filteredTo.length >
+                              0 && (
+                              <div className={styles.dropdown}>
+                                {multiCityDropdowns[route.id].filteredTo.map(
+                                  (airport) => (
+                                    <div
+                                      key={airport.code}
+                                      className={styles.dropdownItem}
+                                      onClick={() =>
+                                        handleMultiCityAirportSelect(
+                                          route.id,
+                                          airport,
+                                          false
+                                        )
+                                      }
+                                    >
+                                      <div className={styles.airportCode}>
+                                        {airport.code} - {airport.city}
+                                      </div>
+                                      <div className={styles.airportName}>
+                                        {airport.name}
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            )}
+                        </div>
+
+                        {/* Date Picker */}
+                        <div className={styles.inputGroup}>
+                          <label className={styles.label}>
+                            {translations.dateLabel}
+                          </label>
+                          <div className={styles.iconInput}>
+                            <Calendar className={styles.inputIcon} />
+                            <DatePicker
+                              selectsRange={true}
+                              startDate={route.dateRange.startDate}
+                              endDate={route.dateRange.endDate}
+                              onChange={(dates: [Date | null, Date | null]) => {
+                                const [start, end] = dates;
+                                updateRoute(route.id, "dateRange", {
+                                  startDate: start || undefined,
+                                  endDate: end || undefined,
+                                });
+                              }}
+                              placeholderText={translations.dateInput}
+                              dateFormat="dd/MM/yyyy"
+                              className={`${styles.input} ${styles.datepickerInput}`}
+                              minDate={new Date()}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {multiCityRoutes.length < 4 && (
+                    <button
+                      type="button"
+                      onClick={addNewRoute}
+                      className={styles.addRouteButton}
+                    >
+                      + {translations.addFlight}
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Common Footer Section */}
+              <div className={styles.footerSection}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>
+                    {translations.travelerLabel}
+                  </label>
+                  <div className={styles.iconInput}>
+                    <User className={styles.inputIcon} />
+                    <select
+                      value={travelers}
+                      onChange={(e) => setTravelers(e.target.value)}
+                      className={styles.select}
+                    >
+                      <option value={translations.travelerLabels.onePerson}>
+                        {translations.travelerLabels.onePerson}
+                      </option>
+                      <option value={translations.travelerLabels.twoPersons}>
+                        {translations.travelerLabels.twoPersons}
+                      </option>
+                      <option value={translations.travelerLabels.threePersons}>
+                        {translations.travelerLabels.threePersons}
+                      </option>
+                      <option value={translations.travelerLabels.multiPerson}>
+                        {translations.travelerLabels.multiPerson}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" className={styles.searchButton}>
+                  <b>{translations.searchButton}</b>
+                </button>
               </div>
             </div>
           </form>
